@@ -1,0 +1,22 @@
+name: 'ESLint Suggestion'
+description: 'Pull Request Suggestions from ESLint'
+inputs:
+  request-changes:
+    description: "Request changes if ESLint doesn't pass."
+    required: false
+    default: true
+  fail-check:
+    description: "Fail the workflow and its corresponding check if ESLint doesn't pass."
+    required: false
+    default: false
+  github-token:
+    description: 'GitHub token.'
+    required: false
+    default: ${{ github.token }}
+  directory:
+    description: "Directory to run ESLint if it's not the project's root directory."
+    required: false
+    default: './'
+  targets:
+    description: 'Files, directories, and/or globs to run ESLint.'
+    required: fal

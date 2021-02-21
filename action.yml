@@ -19,4 +19,19 @@ inputs:
     default: './'
   targets:
     description: 'Files, directories, and/or globs to run ESLint.'
-    required: fal
+    required: false
+    default: '.'
+  eslint-lib-path:
+    description: 'Path to the ESLint JavaScript library file.'
+    required: false
+    default: './node_modules/eslint/lib/api.js'
+  eslint-bin-path:
+    description: 'Path to the ESLint binary file.'
+    required: false
+    default: './node_modules/.bin/eslint'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+branding:
+  icon: 'plus-square'
+  color: 'blue'

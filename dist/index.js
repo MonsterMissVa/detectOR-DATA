@@ -1312,4 +1312,17 @@ class ToolRunner extends events.EventEmitter {
         //    is parsed by a .NET console app into an arg array:
         //          [ "myarg:\"my val\"" ]
         //    which is the same end result when applying libuv quoting rules. although the actual
-  
+        //    command line from libuv quoting rules would look like:
+        //          foo.exe "myarg:\"my val\""
+        //
+        // 3) double-up slashes that precede a quote,
+        //    e.g.  hello \world    => "hello \world"
+        //          hello\"world    => "hello\\""world"
+        //          hello\\"world   => "hello\\\\""world"
+        //          hello world\    => "hello world\\"
+        //
+        //    technically this is not required for a cmd.exe command line, or the batch argument parser.
+        //    the reasons for including this as a .cmd quoting rule are:
+        //
+        //    a) this is optimized for the scenario where the argument is passed from the .cmd file to an
+        //       exte

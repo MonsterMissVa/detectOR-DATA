@@ -1337,4 +1337,17 @@ class ToolRunner extends events.EventEmitter {
         // the saving grace is, on the command line, %var% is left as-is if var is not defined. this contrasts
         // the line parsing rules within a .cmd file, where if var is not defined it is replaced with nothing.
         //
-        // one opt
+        // one option that was explored was replacing % with ^% - i.e. %var% => ^%var^%. this hack would
+        // often work, since it is unlikely that var^ would exist, and the ^ character is removed when the
+        // variable is used. the problem, however, is that ^ is not removed when %* is used to pass the args
+        // to an external program.
+        //
+        // an unexplored potential solution for the % escaping problem, is to create a wrapper .cmd file.
+        // % can be escaped within a .cmd file.
+        let reverse = '"';
+        let quoteHit = true;
+        for (let i = arg.length; i > 0; i--) {
+            // walk the string in reverse
+            reverse += arg[i - 1];
+            if (quoteHit && arg[i - 1] === '\\') {
+                reverse += 

@@ -1325,4 +1325,16 @@ class ToolRunner extends events.EventEmitter {
         //    the reasons for including this as a .cmd quoting rule are:
         //
         //    a) this is optimized for the scenario where the argument is passed from the .cmd file to an
-        //       exte
+        //       external program. many programs (e.g. .NET console apps) rely on the slash-doubling rule.
+        //
+        //    b) it's what we've been doing previously (by deferring to node default behavior) and we
+        //       haven't heard any complaints about that aspect.
+        //
+        // note, a weakness of the quoting rules chosen here, is that % is not escaped. in fact, % cannot be
+        // escaped when used on the command line directly - even though within a .cmd file % can be escaped
+        // by using %%.
+        //
+        // the saving grace is, on the command line, %var% is left as-is if var is not defined. this contrasts
+        // the line parsing rules within a .cmd file, where if var is not defined it is replaced with nothing.
+        //
+        // one opt

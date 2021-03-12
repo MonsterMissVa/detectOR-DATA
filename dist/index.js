@@ -1397,4 +1397,25 @@ class ToolRunner extends events.EventEmitter {
         if (!arg) {
             // Need double quotation for empty argument
             return '""';
-      
+        }
+        if (!arg.includes(' ') && !arg.includes('\t') && !arg.includes('"')) {
+            // No quotation needed
+            return arg;
+        }
+        if (!arg.includes('"') && !arg.includes('\\')) {
+            // No embedded double quotes or backslashes, so I can just wrap
+            // quote marks around the whole thing.
+            return `"${arg}"`;
+        }
+        // Expected input/output:
+        //   input : hello"world
+        //   output: "hello\"world"
+        //   input : hello""world
+        //   output: "hello\"\"world"
+        //   input : hello\world
+        //   output: hello\world
+        //   input : hello\\world
+        //   output: hello\\world
+        //   input : hello\"world
+        //   output: "hello\\\"world"
+        //   input : hello\\"wo

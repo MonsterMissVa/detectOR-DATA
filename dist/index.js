@@ -1522,4 +1522,19 @@ class ToolRunner extends events.EventEmitter {
                             optionsNonNull.outStream.write(data);
                         }
                         stdbuffer = this._processLineBuffer(data, stdbuffer, (line) => {
-     
+                            if (this.options.listeners && this.options.listeners.stdline) {
+                                this.options.listeners.stdline(line);
+                            }
+                        });
+                    });
+                }
+                let errbuffer = '';
+                if (cp.stderr) {
+                    cp.stderr.on('data', (data) => {
+                        state.processStderr = true;
+                        if (this.options.listeners && this.options.listeners.stderr) {
+                            this.options.listeners.stderr(data);
+                        }
+                        if (!optionsNonNull.silent &&
+                            optionsNonNull.errStream &&
+                            optionsNonNull.out

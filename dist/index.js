@@ -2081,4 +2081,19 @@ var HttpCodes;
     HttpCodes[HttpCodes["RequestTimeout"] = 408] = "RequestTimeout";
     HttpCodes[HttpCodes["Conflict"] = 409] = "Conflict";
     HttpCodes[HttpCodes["Gone"] = 410] = "Gone";
-    HttpCodes[HttpCodes["To
+    HttpCodes[HttpCodes["TooManyRequests"] = 429] = "TooManyRequests";
+    HttpCodes[HttpCodes["InternalServerError"] = 500] = "InternalServerError";
+    HttpCodes[HttpCodes["NotImplemented"] = 501] = "NotImplemented";
+    HttpCodes[HttpCodes["BadGateway"] = 502] = "BadGateway";
+    HttpCodes[HttpCodes["ServiceUnavailable"] = 503] = "ServiceUnavailable";
+    HttpCodes[HttpCodes["GatewayTimeout"] = 504] = "GatewayTimeout";
+})(HttpCodes = exports.HttpCodes || (exports.HttpCodes = {}));
+var Headers;
+(function (Headers) {
+    Headers["Accept"] = "accept";
+    Headers["ContentType"] = "content-type";
+})(Headers = exports.Headers || (exports.Headers = {}));
+var MediaTypes;
+(function (MediaTypes) {
+    MediaTypes["ApplicationJson"] = "application/json";
+})(MediaTypes = exports.MediaTypes || (exports.MediaTypes 

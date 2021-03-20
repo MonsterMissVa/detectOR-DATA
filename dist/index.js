@@ -1954,4 +1954,28 @@ class BasicCredentialHandler {
     }
     prepareRequest(options) {
         if (!options.headers) {
-            throw Error('The request
+            throw Error('The request has no headers');
+        }
+        options.headers['Authorization'] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString('base64')}`;
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication() {
+        return false;
+    }
+    handleAuthentication() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('not implemented');
+        });
+    }
+}
+exports.BasicCredentialHandler = BasicCredentialHandler;
+class BearerCredentialHandler {
+    constructor(token) {
+        this.token = token;
+    }
+    // currently implements pre-authorization
+    // TODO: support preAuth = false where it hooks on 401
+    prepareRequest(options) {
+        if (!options.headers) {
+            throw Error('The request has no headers');
+        }

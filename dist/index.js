@@ -2425,4 +2425,28 @@ class HttpClient {
             }
             handleResult(new Error(`Request timeout: ${info.options.path}`));
         });
-        req.on('error', function
+        req.on('error', function (err) {
+            // err has statusCode property
+            // res should have headers
+            handleResult(err);
+        });
+        if (data && typeof data === 'string') {
+            req.write(data, 'utf8');
+        }
+        if (data && typeof data !== 'string') {
+            data.on('close', function () {
+                req.end();
+            });
+            data.pipe(req);
+        }
+        else {
+            req.end();
+        }
+    }
+    /**
+     * Gets an http agent. This function is useful when you need an http agent that handles
+     * routing through a proxy server - depending upon the url and proxy environment variables.
+     * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
+     */
+    getAgent(serverUrl) {
+    

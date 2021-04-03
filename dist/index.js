@@ -2818,4 +2818,17 @@ function tryGetExecutablePath(filePath, extensions) {
             catch (err) {
                 if (err.code !== 'ENOENT') {
                     // eslint-disable-next-line no-console
-                    console.log(`Unexpected erro
+                    console.log(`Unexpected error attempting to determine if executable file exists '${filePath}': ${err}`);
+                }
+            }
+            if (stats && stats.isFile()) {
+                if (exports.IS_WINDOWS) {
+                    // preserve the case of the actual file (since an extension was appended)
+                    try {
+                        const directory = path.dirname(filePath);
+                        const upperName = path.basename(filePath).toUpperCase();
+                        for (const actualName of yield exports.readdir(directory)) {
+                            if (upperName === actualName.toUpperCase()) {
+                                filePath = path.join(directory, actualName);
+                                break;
+                    

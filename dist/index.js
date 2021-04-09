@@ -3343,4 +3343,29 @@ const VERSION = "3.6.0";
 const _excluded = ["authStrategy"];
 class Octokit {
   constructor(options = {}) {
-    const hook = new beforeAfterHook.Collection
+    const hook = new beforeAfterHook.Collection();
+    const requestDefaults = {
+      baseUrl: request.request.endpoint.DEFAULTS.baseUrl,
+      headers: {},
+      request: Object.assign({}, options.request, {
+        // @ts-ignore internal usage only, no need to type
+        hook: hook.bind(null, "request")
+      }),
+      mediaType: {
+        previews: [],
+        format: ""
+      }
+    }; // prepend default user agent with `options.userAgent` if set
+
+    requestDefaults.headers["user-agent"] = [options.userAgent, `octokit-core.js/${VERSION} ${universalUserAgent.getUserAgent()}`].filter(Boolean).join(" ");
+
+    if (options.baseUrl) {
+      requestDefaults.baseUrl = options.baseUrl;
+    }
+
+    if (options.previews) {
+      requestDefaults.mediaType.previews = options.previews;
+    }
+
+    if (options.timeZone) {
+      req

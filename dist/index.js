@@ -3282,3 +3282,32 @@ const createTokenAuth = function createTokenAuth(token) {
     hook: hook.bind(null, token)
   });
 };
+
+exports.createTokenAuth = createTokenAuth;
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 6762:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+var universalUserAgent = __nccwpck_require__(5030);
+var beforeAfterHook = __nccwpck_require__(3682);
+var request = __nccwpck_require__(6234);
+var graphql = __nccwpck_require__(8467);
+var authToken = __nccwpck_require__(334);
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) con

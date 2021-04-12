@@ -3547,4 +3547,38 @@ function merge(defaults, route, options) {
   return mergedOptions;
 }
 
-function
+function addQueryParameters(url, parameters) {
+  const separator = /\?/.test(url) ? "&" : "?";
+  const names = Object.keys(parameters);
+
+  if (names.length === 0) {
+    return url;
+  }
+
+  return url + separator + names.map(name => {
+    if (name === "q") {
+      return "q=" + parameters.q.split("+").map(encodeURIComponent).join("+");
+    }
+
+    return `${name}=${encodeURIComponent(parameters[name])}`;
+  }).join("&");
+}
+
+const urlVariableRegex = /\{[^}]+\}/g;
+
+function removeNonChars(variableName) {
+  return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
+}
+
+function extractUrlVariableNames(url) {
+  const matches = url.match(urlVariableRegex);
+
+  if (!matches) {
+    return [];
+  }
+
+  return matches.map(removeNonChars).reduce((a, b) => a.concat(b), []);
+}
+
+function omit(object, keysToOmit) {
+  retu

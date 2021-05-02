@@ -4416,4 +4416,15 @@ const Endpoints = {
     getOrgInstallation: ["GET /orgs/{org}/installation"],
     getRepoInstallation: ["GET /repos/{owner}/{repo}/installation"],
     getSubscriptionPlanForAccount: ["GET /marketplace_listing/accounts/{account_id}"],
-    getSubscriptionPlanForAccountStubbed: ["GET /marketplace_listing/stubbed/
+    getSubscriptionPlanForAccountStubbed: ["GET /marketplace_listing/stubbed/accounts/{account_id}"],
+    getUserInstallation: ["GET /users/{username}/installation"],
+    getWebhookConfigForApp: ["GET /app/hook/config"],
+    getWebhookDelivery: ["GET /app/hook/deliveries/{delivery_id}"],
+    listAccountsForPlan: ["GET /marketplace_listing/plans/{plan_id}/accounts"],
+    listAccountsForPlanStubbed: ["GET /marketplace_listing/stubbed/plans/{plan_id}/accounts"],
+    listInstallationReposForAuthenticatedUser: ["GET /user/installations/{installation_id}/repositories"],
+    listInstallations: ["GET /app/installations"],
+    listInstallationsForAuthenticatedUser: ["GET /user/installations"],
+    listPlans: ["GET /marketplace_listing/plans"],
+    listPlansStubbed: ["GET /marketplace_listing/stubbed/plans"],
+    listReposAccessibleToInstallation: ["GET /installation/repositori

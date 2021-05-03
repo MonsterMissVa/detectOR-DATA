@@ -4437,4 +4437,16 @@ const Endpoints = {
     }],
     removeRepoFromInstallationForAuthenticatedUser: ["DELETE /user/installations/{installation_id}/repositories/{repository_id}"],
     resetToken: ["PATCH /applications/{client_id}/token"],
-    revokeInstallationAccessToken: ["DELETE /installatio
+    revokeInstallationAccessToken: ["DELETE /installation/token"],
+    scopeToken: ["POST /applications/{client_id}/token/scoped"],
+    suspendInstallation: ["PUT /app/installations/{installation_id}/suspended"],
+    unsuspendInstallation: ["DELETE /app/installations/{installation_id}/suspended"],
+    updateWebhookConfigForApp: ["PATCH /app/hook/config"]
+  },
+  billing: {
+    getGithubActionsBillingOrg: ["GET /orgs/{org}/settings/billing/actions"],
+    getGithubActionsBillingUser: ["GET /users/{username}/settings/billing/actions"],
+    getGithubPackagesBillingOrg: ["GET /orgs/{org}/settings/billing/packages"],
+    getGithubPackagesBillingUser: ["GET /users/{username}/settings/billing/packages"],
+    getSharedStorageBillingOrg: ["GET /orgs/{org}/settings/billing/shared-storage"],
+    getSharedStorageBilli

@@ -4630,4 +4630,17 @@ const Endpoints = {
     getCommitAuthors: ["GET /repos/{owner}/{repo}/import/authors"],
     getImportStatus: ["GET /repos/{owner}/{repo}/import"],
     getLargeFiles: ["GET /repos/{owner}/{repo}/import/large_files"],
-    getStatusForAuthenticatedUser: ["G
+    getStatusForAuthenticatedUser: ["GET /user/migrations/{migration_id}"],
+    getStatusForOrg: ["GET /orgs/{org}/migrations/{migration_id}"],
+    listForAuthenticatedUser: ["GET /user/migrations"],
+    listForOrg: ["GET /orgs/{org}/migrations"],
+    listReposForAuthenticatedUser: ["GET /user/migrations/{migration_id}/repositories"],
+    listReposForOrg: ["GET /orgs/{org}/migrations/{migration_id}/repositories"],
+    listReposForUser: ["GET /user/migrations/{migration_id}/repositories", {}, {
+      renamed: ["migrations", "listReposForAuthenticatedUser"]
+    }],
+    mapCommitAuthor: ["PATCH /repos/{owner}/{repo}/import/authors/{author_id}"],
+    setLfsPreference: ["PATCH /repos/{owner}/{repo}/import/lfs"],
+    startForAuthenticatedUser: ["POST /user/migrations"],
+    startForOrg: ["POST /orgs/{org}/migrations"],
+  

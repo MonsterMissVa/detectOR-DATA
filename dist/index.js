@@ -4681,4 +4681,16 @@ const Endpoints = {
     pingWebhook: ["POST /orgs/{org}/hooks/{hook_id}/pings"],
     redeliverWebhookDelivery: ["POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"],
     removeMember: ["DELETE /orgs/{org}/members/{username}"],
-    removeMemb
+    removeMembershipForUser: ["DELETE /orgs/{org}/memberships/{username}"],
+    removeOutsideCollaborator: ["DELETE /orgs/{org}/outside_collaborators/{username}"],
+    removePublicMembershipForAuthenticatedUser: ["DELETE /orgs/{org}/public_members/{username}"],
+    setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
+    setPublicMembershipForAuthenticatedUser: ["PUT /orgs/{org}/public_members/{username}"],
+    unblockUser: ["DELETE /orgs/{org}/blocks/{username}"],
+    update: ["PATCH /orgs/{org}"],
+    updateMembershipForAuthenticatedUser: ["PATCH /user/memberships/orgs/{org}"],
+    updateWebhook: ["PATCH /orgs/{org}/hooks/{hook_id}"],
+    updateWebhookConfigForOrg: ["PATCH /orgs/{org}/hooks/{hook_id}/config"]
+  },
+  packages: {
+    deletePackageForAuthenticatedUser: ["DELE

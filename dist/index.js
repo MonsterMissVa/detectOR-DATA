@@ -4740,4 +4740,18 @@ const Endpoints = {
     getPermissionForUser: ["GET /projects/{project_id}/collaborators/{username}/permission"],
     listCards: ["GET /projects/columns/{column_id}/cards"],
     listCollaborators: ["GET /projects/{project_id}/collaborators"],
-    listColumns: ["GET 
+    listColumns: ["GET /projects/{project_id}/columns"],
+    listForOrg: ["GET /orgs/{org}/projects"],
+    listForRepo: ["GET /repos/{owner}/{repo}/projects"],
+    listForUser: ["GET /users/{username}/projects"],
+    moveCard: ["POST /projects/columns/cards/{card_id}/moves"],
+    moveColumn: ["POST /projects/columns/{column_id}/moves"],
+    removeCollaborator: ["DELETE /projects/{project_id}/collaborators/{username}"],
+    update: ["PATCH /projects/{project_id}"],
+    updateCard: ["PATCH /projects/columns/cards/{card_id}"],
+    updateColumn: ["PATCH /projects/columns/{column_id}"]
+  },
+  pulls: {
+    checkIfMerged: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/merge"],
+    create: ["POST /repos/{owner}/{repo}/pulls"],
+    createReplyForReviewComment: ["POST /repos/{owner}/{repo}/pulls/{pull_number}

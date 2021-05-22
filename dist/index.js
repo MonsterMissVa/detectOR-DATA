@@ -5132,4 +5132,25 @@ const Endpoints = {
     listPublicEmailsForAuthenticatedUser: ["GET /user/public_emails"],
     listPublicKeysForUser: ["GET /users/{username}/keys"],
     listPublicSshKeysForAuthenticated: ["GET /user/keys", {}, {
-      renamed: ["users", "listPublicSshKeysForAuthenticatedUser
+      renamed: ["users", "listPublicSshKeysForAuthenticatedUser"]
+    }],
+    listPublicSshKeysForAuthenticatedUser: ["GET /user/keys"],
+    setPrimaryEmailVisibilityForAuthenticated: ["PATCH /user/email/visibility", {}, {
+      renamed: ["users", "setPrimaryEmailVisibilityForAuthenticatedUser"]
+    }],
+    setPrimaryEmailVisibilityForAuthenticatedUser: ["PATCH /user/email/visibility"],
+    unblock: ["DELETE /user/blocks/{username}"],
+    unfollow: ["DELETE /user/following/{username}"],
+    updateAuthenticated: ["PATCH /user"]
+  }
+};
+
+const VERSION = "5.13.0";
+
+function endpointsToMethods(octokit, endpointsMap) {
+  const newMethods = {};
+
+  for (const [scope, endpoints] of Object.entries(endpointsMap)) {
+    for (const [methodName, endpoint] of Object.entries(endpoints)) {
+      const [route, defaults, decorations] = endpoint;
+      const 

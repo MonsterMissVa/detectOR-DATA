@@ -5366,4 +5366,25 @@ async function doRequest(state, request, options) {
   } : {};
   if (state.clustering) {
     // Remove a job from Redis if it has not completed or failed within 60s
-    // Examples: Node process terminated, client disconnect
+    // Examples: Node process terminated, client disconnected, etc.
+    // @ts-expect-error
+    jobOptions.expiration = 1000 * 60;
+  }
+  // Guarantee at least 1000ms between writes
+  // GraphQL can also trigger writes
+  if (isWrite || isGraphQL) {
+    await state.write.key(state.id).schedule(jobOptions, noop);
+  }
+  // Guarantee at least 3000ms between requests that trigger notifications
+  if (isWrite && state.triggersNotification(pathname)) {
+    await state.notifications.key(state.id).schedule(jobOptions, noop);
+  }
+  // Guarantee at least 2000ms between search requests
+  if (isSearch) {
+    await state.search.key(state.id).schedule(jobOptions, noop);
+  }
+  const req = state.global.key(state.id).schedule(jobOptions, request, options);
+  if (isGraphQL) {
+    const res = await req;
+    if (res.data.errors != null &&
+    // @ts-expect-error

@@ -5345,3 +5345,25 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var BottleneckLight = _interopDefault(__nccwpck_require__(1174));
 
 const VERSION = "4.3.2";
+
+const noop = () => Promise.resolve();
+// @ts-expect-error
+function wrapRequest(state, request, options) {
+  return state.retryLimiter.schedule(doRequest, state, request, options);
+}
+// @ts-expect-error
+async function doRequest(state, request, options) {
+  const isWrite = options.method !== "GET" && options.method !== "HEAD";
+  const {
+    pathname
+  } = new URL(options.url, "http://github.test");
+  const isSearch = options.method === "GET" && pathname.startsWith("/search/");
+  const isGraphQL = pathname.startsWith("/graphql");
+  const retryCount = ~~request.retryCount;
+  const jobOptions = retryCount > 0 ? {
+    priority: 0,
+    weight: 0
+  } : {};
+  if (state.clustering) {
+    // Remove a job from Redis if it has not completed or failed within 60s
+    // Examples: Node process terminated, client disconnect

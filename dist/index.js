@@ -5285,4 +5285,28 @@ async function wrapRequest(state, request, options) {
   const limiter = new Bottleneck(); // @ts-ignore
 
   limiter.on("failed", function (error, info) {
-    const maxRetries = 
+    const maxRetries = ~~error.request.request.retries;
+    const after = ~~error.request.request.retryAfter;
+    options.request.retryCount = info.retryCount + 1;
+
+    if (maxRetries > info.retryCount) {
+      // Returning a number instructs the limiter to retry
+      // the request after that number of milliseconds have passed
+      return after * state.retryAfterBaseValue;
+    }
+  });
+  return limiter.schedule(request, options);
+}
+
+const VERSION = "3.0.9";
+function retry(octokit, octokitOptions) {
+  const state = Object.assign({
+    enabled: true,
+    retryAfterBaseValue: 1000,
+    doNotRetry: [400, 401, 403, 404, 422],
+    retries: 3
+  }, octokitOptions.retry);
+
+  if (state.enabled) {
+    octokit.hook.error("request", errorRequest.bind(null, octokit, state));
+    octokit.hook.wrap

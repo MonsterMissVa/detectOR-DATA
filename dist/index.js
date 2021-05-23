@@ -5309,4 +5309,39 @@ function retry(octokit, octokitOptions) {
 
   if (state.enabled) {
     octokit.hook.error("request", errorRequest.bind(null, octokit, state));
-    octokit.hook.wrap
+    octokit.hook.wrap("request", wrapRequest.bind(null, state));
+  }
+
+  return {
+    retry: {
+      retryRequest: (error, retries, retryAfter) => {
+        error.request.request = Object.assign({}, error.request.request, {
+          retries: retries,
+          retryAfter: retryAfter
+        });
+        return error;
+      }
+    }
+  };
+}
+retry.VERSION = VERSION;
+
+exports.VERSION = VERSION;
+exports.retry = retry;
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 9968:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var BottleneckLight = _interopDefault(__nccwpck_require__(1174));
+
+const VERSION = "4.3.2";

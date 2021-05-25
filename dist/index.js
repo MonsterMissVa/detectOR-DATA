@@ -5474,4 +5474,20 @@ function throttling(octokit, octokitOptions) {
     createGroups(Bottleneck, common);
   }
   const state = Object.assign({
-    clustering: connecti
+    clustering: connection != null,
+    triggersNotification,
+    minimumSecondaryRateRetryAfter: 5,
+    retryAfterBaseValue: 1000,
+    retryLimiter: new Bottleneck(),
+    id,
+    ...groups
+  }, octokitOptions.throttle);
+  const isUsingDeprecatedOnAbuseLimitHandler = typeof state.onAbuseLimit === "function" && state.onAbuseLimit;
+  if (typeof (isUsingDeprecatedOnAbuseLimitHandler ? state.onAbuseLimit : state.onSecondaryRateLimit) !== "function" || typeof state.onRateLimit !== "function") {
+    throw new Error(`octokit/plugin-throttling error:
+        You must pass the onSecondaryRateLimit and onRateLimit error handlers.
+        See https://github.com/octokit/rest.js#throttling
+
+        const octokit = new Octokit({
+          throttle: {
+            onSecondaryRateLimit: (re

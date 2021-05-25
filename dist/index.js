@@ -5413,4 +5413,26 @@ function routeMatcher(paths) {
       '/orgs/(?:.+?)/invitations',
       '/repos/(?:.+?)/(?:.+?)/collaborators/(?:.+?)'
   ] */
-  const 
+  const regex = `^(?:${regexes.map(r => `(?:${r})`).join("|")})[^/]*$`;
+  // 'regex' would contain:
+  /*
+    ^(?:(?:\/orgs\/(?:.+?)\/invitations)|(?:\/repos\/(?:.+?)\/(?:.+?)\/collaborators\/(?:.+?)))[^\/]*$
+       It may look scary, but paste it into https://www.debuggex.com/
+    and it will make a lot more sense!
+  */
+  return new RegExp(regex, "i");
+}
+
+// @ts-expect-error
+// Workaround to allow tests to directly access the triggersNotification function.
+const regex = routeMatcher(triggersNotificationPaths);
+const triggersNotification = regex.test.bind(regex);
+const groups = {};
+// @ts-expect-error
+const createGroups = function (Bottleneck, common) {
+  groups.global = new Bottleneck.Group({
+    id: "octokit-global",
+    maxConcurrent: 10,
+    ...common
+  });
+  groups.search 

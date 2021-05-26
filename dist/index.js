@@ -5508,4 +5508,24 @@ function throttling(octokit, octokitOptions) {
   events.on("rate-limit", state.onRateLimit);
   // @ts-expect-error
   events.on("error", e => octokit.log.warn("Error in throttling-plugin limit handler", e));
-  // @ts-
+  // @ts-expect-error
+  state.retryLimiter.on("failed", async function (error, info) {
+    const [state, request, options] = info.args;
+    const {
+      pathname
+    } = new URL(options.url, "http://github.test");
+    const shouldRetryGraphQL = pathname.startsWith("/graphql") && error.status !== 401;
+    if (!(shouldRetryGraphQL || error.status === 403)) {
+      return;
+    }
+    const retryCount = ~~request.retryCount;
+    request.retryCount = retryCount;
+    // backward compatibility
+    options.request.retryCount = retryCount;
+    const {
+      wantRetry,
+      retryAfter = 0
+    } = await async function () {
+      if (/\bsecondary rate\b/i.test(error.message)) {
+        // The user has hit the secondary rate limit. (REST and GraphQL)
+        // https://docs.github.com/en/rest/overview/resources-in-the-rest-a

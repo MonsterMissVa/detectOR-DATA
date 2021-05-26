@@ -5490,4 +5490,22 @@ function throttling(octokit, octokitOptions) {
 
         const octokit = new Octokit({
           throttle: {
-            onSecondaryRateLimit: (re
+            onSecondaryRateLimit: (retryAfter, options) => {/* ... */},
+            onRateLimit: (retryAfter, options) => {/* ... */}
+          }
+        })
+    `);
+  }
+  const events = {};
+  const emitter = new Bottleneck.Events(events);
+  // @ts-expect-error
+  events.on("secondary-limit", isUsingDeprecatedOnAbuseLimitHandler ? function (...args) {
+    octokit.log.warn("[@octokit/plugin-throttling] `onAbuseLimit()` is deprecated and will be removed in a future release of `@octokit/plugin-throttling`, please use the `onSecondaryRateLimit` handler instead");
+    // @ts-expect-error
+    return state.onAbuseLimit(...args);
+  } : state.onSecondaryRateLimit);
+  // @ts-expect-error
+  events.on("rate-limit", state.onRateLimit);
+  // @ts-expect-error
+  events.on("error", e => octokit.log.warn("Error in throttling-plugin limit handler", e));
+  // @ts-

@@ -5528,4 +5528,17 @@ function throttling(octokit, octokitOptions) {
     } = await async function () {
       if (/\bsecondary rate\b/i.test(error.message)) {
         // The user has hit the secondary rate limit. (REST and GraphQL)
-        // https://docs.github.com/en/rest/overview/resources-in-the-rest-a
+        // https://docs.github.com/en/rest/overview/resources-in-the-rest-api#secondary-rate-limits
+        // The Retry-After header can sometimes be blank when hitting a secondary rate limit,
+        // but is always present after 2-3s, so make sure to set `retryAfter` to at least 5s by default.
+        const retryAfter = Math.max(~~error.response.headers["retry-after"], state.minimumSecondaryRateRetryAfter);
+        const wantRetry = await emitter.trigger("secondary-limit", retryAfter, options, octokit, retryCount);
+        return {
+          wantRetry,
+          retryAfter
+        };
+      }
+      if (error.response.headers != null && error.response.headers["x-ratelimit-remaining"] === "0") {
+        // The user has used all their allowed calls for the current time period (REST and GraphQL)
+        // https://docs.github.com/en/rest/reference/rate-limit (REST)
+        // http

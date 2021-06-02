@@ -6241,4 +6241,34 @@ function removeHook(state, name, method) {
 	  }
 
 	  _addListener(name, status, cb) {
-	    var b
+	    var base;
+	    if ((base = this._events)[name] == null) {
+	      base[name] = [];
+	    }
+	    this._events[name].push({cb, status});
+	    return this.instance;
+	  }
+
+	  listenerCount(name) {
+	    if (this._events[name] != null) {
+	      return this._events[name].length;
+	    } else {
+	      return 0;
+	    }
+	  }
+
+	  async trigger(name, ...args) {
+	    var e, promises;
+	    try {
+	      if (name !== "debug") {
+	        this.trigger("debug", `Event triggered: ${name}`, args);
+	      }
+	      if (this._events[name] == null) {
+	        return;
+	      }
+	      this._events[name] = this._events[name].filter(function(listener) {
+	        return listener.status !== "none";
+	      });
+	      promises = this._events[name].map(async(listener) => {
+	        var e, returned;
+	        if (listener.

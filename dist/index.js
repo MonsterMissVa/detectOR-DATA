@@ -6296,4 +6296,43 @@ function removeHook(state, name, method) {
 	        return x != null;
 	      });
 	    } catch (error) {
-	      e = 
+	      e = error;
+	      {
+	        this.trigger("error", e);
+	      }
+	      return null;
+	    }
+	  }
+
+	};
+
+	var Events_1 = Events;
+
+	var DLList$1, Events$1, Queues;
+
+	DLList$1 = DLList_1;
+
+	Events$1 = Events_1;
+
+	Queues = class Queues {
+	  constructor(num_priorities) {
+	    var i;
+	    this.Events = new Events$1(this);
+	    this._length = 0;
+	    this._lists = (function() {
+	      var j, ref, results;
+	      results = [];
+	      for (i = j = 1, ref = num_priorities; (1 <= ref ? j <= ref : j >= ref); i = 1 <= ref ? ++j : --j) {
+	        results.push(new DLList$1((() => {
+	          return this.incr();
+	        }), (() => {
+	          return this.decr();
+	        })));
+	      }
+	      return results;
+	    }).call(this);
+	  }
+
+	  incr() {
+	    if (this._length++ === 0) {
+	      return this.Events.tri

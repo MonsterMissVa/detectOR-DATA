@@ -6335,4 +6335,44 @@ function removeHook(state, name, method) {
 
 	  incr() {
 	    if (this._length++ === 0) {
-	      return this.Events.tri
+	      return this.Events.trigger("leftzero");
+	    }
+	  }
+
+	  decr() {
+	    if (--this._length === 0) {
+	      return this.Events.trigger("zero");
+	    }
+	  }
+
+	  push(job) {
+	    return this._lists[job.options.priority].push(job);
+	  }
+
+	  queued(priority) {
+	    if (priority != null) {
+	      return this._lists[priority].length;
+	    } else {
+	      return this._length;
+	    }
+	  }
+
+	  shiftAll(fn) {
+	    return this._lists.forEach(function(list) {
+	      return list.forEachShift(fn);
+	    });
+	  }
+
+	  getFirst(arr = this._lists) {
+	    var j, len, list;
+	    for (j = 0, len = arr.length; j < len; j++) {
+	      list = arr[j];
+	      if (list.length > 0) {
+	        return list;
+	      }
+	    }
+	    return [];
+	  }
+
+	  shiftLastFrom(priority) {
+	    return this.ge

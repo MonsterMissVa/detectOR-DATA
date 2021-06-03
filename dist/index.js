@@ -6271,4 +6271,29 @@ function removeHook(state, name, method) {
 	      });
 	      promises = this._events[name].map(async(listener) => {
 	        var e, returned;
-	        if (listener.
+	        if (listener.status === "none") {
+	          return;
+	        }
+	        if (listener.status === "once") {
+	          listener.status = "none";
+	        }
+	        try {
+	          returned = typeof listener.cb === "function" ? listener.cb(...args) : void 0;
+	          if (typeof (returned != null ? returned.then : void 0) === "function") {
+	            return (await returned);
+	          } else {
+	            return returned;
+	          }
+	        } catch (error) {
+	          e = error;
+	          {
+	            this.trigger("error", e);
+	          }
+	          return null;
+	        }
+	      });
+	      return ((await Promise.all(promises))).find(function(x) {
+	        return x != null;
+	      });
+	    } catch (error) {
+	      e = 

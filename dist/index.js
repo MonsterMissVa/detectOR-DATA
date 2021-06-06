@@ -6450,4 +6450,30 @@ function removeHook(state, name, method) {
 	    var status;
 	    status = this._states.jobStatus(this.options.id);
 	    if (!(status === expected || (expected === "DONE" && status === null))) {
-	      throw new BottleneckError$1(`Invalid job status ${status}, expected ${expected}. Please open an issue at https://github.com/SGrondin/bott
+	      throw new BottleneckError$1(`Invalid job status ${status}, expected ${expected}. Please open an issue at https://github.com/SGrondin/bottleneck/issues`);
+	    }
+	  }
+
+	  doReceive() {
+	    this._states.start(this.options.id);
+	    return this.Events.trigger("received", {args: this.args, options: this.options});
+	  }
+
+	  doQueue(reachedHWM, blocked) {
+	    this._assertStatus("RECEIVED");
+	    this._states.next(this.options.id);
+	    return this.Events.trigger("queued", {args: this.args, options: this.options, reachedHWM, blocked});
+	  }
+
+	  doRun() {
+	    if (this.retryCount === 0) {
+	      this._assertStatus("QUEUED");
+	      this._states.next(this.options.id);
+	    } else {
+	      this._assertStatus("EXECUTING");
+	    }
+	    return this.Events.trigger("scheduled", {args: this.args, options: this.options});
+	  }
+
+	  async doExecute(chained, clearGlobalState, run, free) {
+	    var erro

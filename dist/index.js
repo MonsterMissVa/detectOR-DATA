@@ -6564,4 +6564,17 @@ function removeHook(state, name, method) {
 	    if ((this.heartbeat == null) && (((this.storeOptions.reservoirRefreshInterval != null) && (this.storeOptions.reservoirRefreshAmount != null)) || ((this.storeOptions.reservoirIncreaseInterval != null) && (this.storeOptions.reservoirIncreaseAmount != null)))) {
 	      return typeof (base = (this.heartbeat = setInterval(() => {
 	        var amount, incr, maximum, now, reservoir;
-	      
+	        now = Date.now();
+	        if ((this.storeOptions.reservoirRefreshInterval != null) && now >= this._lastReservoirRefresh + this.storeOptions.reservoirRefreshInterval) {
+	          this._lastReservoirRefresh = now;
+	          this.storeOptions.reservoir = this.storeOptions.reservoirRefreshAmount;
+	          this.instance._drainAll(this.computeCapacity());
+	        }
+	        if ((this.storeOptions.reservoirIncreaseInterval != null) && now >= this._lastReservoirIncrease + this.storeOptions.reservoirIncreaseInterval) {
+	          ({
+	            reservoirIncreaseAmount: amount,
+	            reservoirIncreaseMaximum: maximum,
+	            reservoir
+	          } = this.storeOptions);
+	          this._lastReservoirIncrease = now;
+	          incr = maximum != null ? Math.min(

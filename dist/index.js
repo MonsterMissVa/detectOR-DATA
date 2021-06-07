@@ -6516,4 +6516,36 @@ function removeHook(state, name, method) {
 	      retry = (await this.Events.trigger("failed", error, eventInfo));
 	      if (retry != null) {
 	        retryAfter = ~~retry;
-	        this.Events.trigger("re
+	        this.Events.trigger("retry", `Retrying ${this.options.id} after ${retryAfter} ms`, eventInfo);
+	        this.retryCount++;
+	        return run(retryAfter);
+	      } else {
+	        this.doDone(eventInfo);
+	        await free(this.options, eventInfo);
+	        this._assertStatus("DONE");
+	        return this._reject(error);
+	      }
+	    }
+	  }
+
+	  doDone(eventInfo) {
+	    this._assertStatus("EXECUTING");
+	    this._states.next(this.options.id);
+	    return this.Events.trigger("done", eventInfo);
+	  }
+
+	};
+
+	var Job_1 = Job;
+
+	var BottleneckError$2, LocalDatastore, parser$2;
+
+	parser$2 = parser;
+
+	BottleneckError$2 = BottleneckError_1;
+
+	LocalDatastore = class LocalDatastore {
+	  constructor(instance, storeOptions, storeInstanceOptions) {
+	    this.instance = instance;
+	    this.storeOptions = storeOptions;
+	  

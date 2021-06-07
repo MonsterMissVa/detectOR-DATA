@@ -6476,4 +6476,23 @@ function removeHook(state, name, method) {
 	  }
 
 	  async doExecute(chained, clearGlobalState, run, free) {
-	    var erro
+	    var error, eventInfo, passed;
+	    if (this.retryCount === 0) {
+	      this._assertStatus("RUNNING");
+	      this._states.next(this.options.id);
+	    } else {
+	      this._assertStatus("EXECUTING");
+	    }
+	    eventInfo = {args: this.args, options: this.options, retryCount: this.retryCount};
+	    this.Events.trigger("executing", eventInfo);
+	    try {
+	      passed = (await (chained != null ? chained.schedule(this.options, this.task, ...this.args) : this.task(...this.args)));
+	      if (clearGlobalState()) {
+	        this.doDone(eventInfo);
+	        await free(this.options, eventInfo);
+	        this._assertStatus("DONE");
+	        return this._resolve(passed);
+	      }
+	    } catch (error1) {
+	      error = error1;
+	      return this._onFailure(error, eventInfo, clearGlobalState, run, 

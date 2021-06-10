@@ -6697,4 +6697,28 @@ function removeHook(state, name, method) {
 	        this.storeOptions.reservoir -= weight;
 	      }
 	      wait = Math.max(this._nextRequest - now, 0);
-	      this._nextRequest = now
+	      this._nextRequest = now + wait + this.storeOptions.minTime;
+	      return {
+	        success: true,
+	        wait,
+	        reservoir: this.storeOptions.reservoir
+	      };
+	    } else {
+	      return {
+	        success: false
+	      };
+	    }
+	  }
+
+	  strategyIsBlock() {
+	    return this.storeOptions.strategy === 3;
+	  }
+
+	  async __submit__(queueLength, weight) {
+	    var blocked, now, reachedHWM;
+	    await this.yieldLoop();
+	    if ((this.storeOptions.maxConcurrent != null) && weight > this.storeOptions.maxConcurrent) {
+	      throw new BottleneckError$2(`Impossible to add a job having a weight of ${weight} to a limiter having a maxConcurrent setting of ${this.storeOptions.maxConcurrent}`);
+	    }
+	    now = Date.now();
+	    reachedHWM = (this.storeOptions.highWater != null) && queueLe

@@ -6747,4 +6747,42 @@ function removeHook(state, name, method) {
 
 	};
 
-	var LocalDatastore_1 = LocalDat
+	var LocalDatastore_1 = LocalDatastore;
+
+	var BottleneckError$3, States;
+
+	BottleneckError$3 = BottleneckError_1;
+
+	States = class States {
+	  constructor(status1) {
+	    this.status = status1;
+	    this._jobs = {};
+	    this.counts = this.status.map(function() {
+	      return 0;
+	    });
+	  }
+
+	  next(id) {
+	    var current, next;
+	    current = this._jobs[id];
+	    next = current + 1;
+	    if ((current != null) && next < this.status.length) {
+	      this.counts[current]--;
+	      this.counts[next]++;
+	      return this._jobs[id]++;
+	    } else if (current != null) {
+	      this.counts[current]--;
+	      return delete this._jobs[id];
+	    }
+	  }
+
+	  start(id) {
+	    var initial;
+	    initial = 0;
+	    this._jobs[id] = initial;
+	    return this.counts[initial]++;
+	  }
+
+	  remove(id) {
+	    var current;
+	    cu

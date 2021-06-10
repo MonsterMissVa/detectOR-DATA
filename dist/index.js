@@ -6721,4 +6721,30 @@ function removeHook(state, name, method) {
 	      throw new BottleneckError$2(`Impossible to add a job having a weight of ${weight} to a limiter having a maxConcurrent setting of ${this.storeOptions.maxConcurrent}`);
 	    }
 	    now = Date.now();
-	    reachedHWM = (this.storeOptions.highWater != null) && queueLe
+	    reachedHWM = (this.storeOptions.highWater != null) && queueLength === this.storeOptions.highWater && !this.check(weight, now);
+	    blocked = this.strategyIsBlock() && (reachedHWM || this.isBlocked(now));
+	    if (blocked) {
+	      this._unblockTime = now + this.computePenalty();
+	      this._nextRequest = this._unblockTime + this.storeOptions.minTime;
+	      this.instance._dropAllQueued();
+	    }
+	    return {
+	      reachedHWM,
+	      blocked,
+	      strategy: this.storeOptions.strategy
+	    };
+	  }
+
+	  async __free__(index, weight) {
+	    await this.yieldLoop();
+	    this._running -= weight;
+	    this._done += weight;
+	    this.instance._drainAll(this.computeCapacity());
+	    return {
+	      running: this._running
+	    };
+	  }
+
+	};
+
+	var LocalDatastore_1 = LocalDat

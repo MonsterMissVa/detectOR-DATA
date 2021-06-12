@@ -6889,4 +6889,33 @@ function removeHook(state, name, method) {
 
 	var version = "2.19.5";
 	var version$1 = {
-		version: 
+		version: version
+	};
+
+	var version$2 = /*#__PURE__*/Object.freeze({
+		version: version,
+		default: version$1
+	});
+
+	var require$$2 = () => console.log('You must import the full version of Bottleneck in order to use this feature.');
+
+	var require$$3 = () => console.log('You must import the full version of Bottleneck in order to use this feature.');
+
+	var require$$4 = () => console.log('You must import the full version of Bottleneck in order to use this feature.');
+
+	var Events$2, Group, IORedisConnection$1, RedisConnection$1, Scripts$1, parser$3;
+
+	parser$3 = parser;
+
+	Events$2 = Events_1;
+
+	RedisConnection$1 = require$$2;
+
+	IORedisConnection$1 = require$$3;
+
+	Scripts$1 = require$$4;
+
+	Group = (function() {
+	  class Group {
+	    constructor(limiterOptions = {}) {
+	      this.deleteKey = this.deleteKey.bind(

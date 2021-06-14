@@ -7178,4 +7178,42 @@ function removeHook(state, name, method) {
 
 	    _validateOptions(options, invalid) {
 	      if (!((options != null) && typeof options === "object" && invalid.length === 0)) {
-	        throw new Bottleneck.prototype.BottleneckError("Bottleneck v2
+	        throw new Bottleneck.prototype.BottleneckError("Bottleneck v2 takes a single object argument. Refer to https://github.com/SGrondin/bottleneck#upgrading-to-v2 if you're upgrading from Bottleneck v1.");
+	      }
+	    }
+
+	    ready() {
+	      return this._store.ready;
+	    }
+
+	    clients() {
+	      return this._store.clients;
+	    }
+
+	    channel() {
+	      return `b_${this.id}`;
+	    }
+
+	    channel_client() {
+	      return `b_${this.id}_${this._store.clientId}`;
+	    }
+
+	    publish(message) {
+	      return this._store.__publish__(message);
+	    }
+
+	    disconnect(flush = true) {
+	      return this._store.__disconnect__(flush);
+	    }
+
+	    chain(_limiter) {
+	      this._limiter = _limiter;
+	      return this;
+	    }
+
+	    queued(priority) {
+	      return this._queues.queued(priority);
+	    }
+
+	    clusterQueued() {
+	      return this._store.__que

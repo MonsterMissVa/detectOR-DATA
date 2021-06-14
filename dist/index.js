@@ -6991,4 +6991,31 @@ function removeHook(state, name, method) {
 	      end = "_settings".length;
 	      while (cursor !== 0) {
 	        [next, found] = (await this.connection.__runCommand__(["scan", cursor != null ? cursor : 0, "match", `b_${this.id}-*_settings`, "count", 10000]));
-	        cursor = ~~n
+	        cursor = ~~next;
+	        for (i = 0, len = found.length; i < len; i++) {
+	          k = found[i];
+	          keys.push(k.slice(start, -end));
+	        }
+	      }
+	      return keys;
+	    }
+
+	    _startAutoCleanup() {
+	      var base;
+	      clearInterval(this.interval);
+	      return typeof (base = (this.interval = setInterval(async() => {
+	        var e, k, ref, results, time, v;
+	        time = Date.now();
+	        ref = this.instances;
+	        results = [];
+	        for (k in ref) {
+	          v = ref[k];
+	          try {
+	            if ((await v._store.__groupCheck__(time))) {
+	              results.push(this.deleteKey(k));
+	            } else {
+	              results.push(void 0);
+	            }
+	          } catch (error) {
+	            e = error;
+	            results.push(v.Events.trigger("error

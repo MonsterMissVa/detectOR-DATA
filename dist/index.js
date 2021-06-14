@@ -7149,4 +7149,16 @@ function removeHook(state, name, method) {
 	      parser$5.load(options, this.instanceDefaults, this);
 	      this._queues = new Queues$1(NUM_PRIORITIES$1);
 	      this._scheduled = {};
-	      this._states = new States$1(["RECEIVED", "QUEUED", "RUNNING", "EXECUT
+	      this._states = new States$1(["RECEIVED", "QUEUED", "RUNNING", "EXECUTING"].concat(this.trackDoneStatus ? ["DONE"] : []));
+	      this._limiter = null;
+	      this.Events = new Events$4(this);
+	      this._submitLock = new Sync$1("submit", this.Promise);
+	      this._registerLock = new Sync$1("register", this.Promise);
+	      storeOptions = parser$5.load(options, this.storeDefaults, {});
+	      this._store = (function() {
+	        if (this.datastore === "redis" || this.datastore === "ioredis" || (this.connection != null)) {
+	          storeInstanceOptions = parser$5.load(options, this.redisStoreDefaults, {});
+	          return new RedisDatastore$1(this, storeOptions, storeInstanceOptions);
+	        } else if (this.datastore === "local") {
+	          storeInstanceOptions = parser$5.load(options, this.localStoreDefaults, {});
+	          return 

@@ -7415,4 +7415,23 @@ function removeHook(state, name, method) {
 	      } catch (error1) {
 	        error = error1;
 	        this.Events.trigger("debug", `Could not queue ${options.id}`, {args, options, error});
-	        job.doDrop({erro
+	        job.doDrop({error});
+	        return false;
+	      }
+	      if (blocked) {
+	        job.doDrop();
+	        return true;
+	      } else if (reachedHWM) {
+	        shifted = strategy === Bottleneck.prototype.strategy.LEAK ? this._queues.shiftLastFrom(options.priority) : strategy === Bottleneck.prototype.strategy.OVERFLOW_PRIORITY ? this._queues.shiftLastFrom(options.priority + 1) : strategy === Bottleneck.prototype.strategy.OVERFLOW ? job : void 0;
+	        if (shifted != null) {
+	          shifted.doDrop();
+	        }
+	        if ((shifted == null) || strategy === Bottleneck.prototype.strategy.OVERFLOW) {
+	          if (shifted == null) {
+	            job.doDrop();
+	          }
+	          return reachedHWM;
+	        }
+	      }
+	      job.doQueue(reachedHWM, blocked);
+	    

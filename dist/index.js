@@ -7348,4 +7348,29 @@ function removeHook(state, name, method) {
 
 	    stop(options = {}) {
 	      var done, waitForExecuting;
-	      options = pars
+	      options = parser$5.load(options, this.stopDefaults);
+	      waitForExecuting = (at) => {
+	        var finished;
+	        finished = () => {
+	          var counts;
+	          counts = this._states.counts;
+	          return (counts[0] + counts[1] + counts[2] + counts[3]) === at;
+	        };
+	        return new this.Promise((resolve, reject) => {
+	          if (finished()) {
+	            return resolve();
+	          } else {
+	            return this.on("done", () => {
+	              if (finished()) {
+	                this.removeAllListeners("done");
+	                return resolve();
+	              }
+	            });
+	          }
+	        });
+	      };
+	      done = options.dropWaitingJobs ? (this._run = function(index, next) {
+	        return next.doDrop({
+	          message: options.dropErrorMessage
+	        });
+	      }

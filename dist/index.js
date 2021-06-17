@@ -7398,4 +7398,21 @@ function removeHook(state, name, method) {
 	      }, () => {
 	        return waitForExecuting(1);
 	      });
-	      this._receive = fu
+	      this._receive = function(job) {
+	        return job._reject(new Bottleneck.prototype.BottleneckError(options.enqueueErrorMessage));
+	      };
+	      this.stop = () => {
+	        return this.Promise.reject(new Bottleneck.prototype.BottleneckError("stop() has already been called"));
+	      };
+	      return done;
+	    }
+
+	    async _addToQueue(job) {
+	      var args, blocked, error, options, reachedHWM, shifted, strategy;
+	      ({args, options} = job);
+	      try {
+	        ({reachedHWM, blocked, strategy} = (await this._store.__submit__(this.queued(), options.weight)));
+	      } catch (error1) {
+	        error = error1;
+	        this.Events.trigger("debug", `Could not queue ${options.id}`, {args, options, error});
+	        job.doDrop({erro

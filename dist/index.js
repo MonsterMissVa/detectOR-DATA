@@ -7373,4 +7373,29 @@ function removeHook(state, name, method) {
 	        return next.doDrop({
 	          message: options.dropErrorMessage
 	        });
-	      }
+	      }, this._drainOne = () => {
+	        return this.Promise.resolve(null);
+	      }, this._registerLock.schedule(() => {
+	        return this._submitLock.schedule(() => {
+	          var k, ref, v;
+	          ref = this._scheduled;
+	          for (k in ref) {
+	            v = ref[k];
+	            if (this.jobStatus(v.job.options.id) === "RUNNING") {
+	              clearTimeout(v.timeout);
+	              clearTimeout(v.expiration);
+	              v.job.doDrop({
+	                message: options.dropErrorMessage
+	              });
+	            }
+	          }
+	          this._dropAllQueued(options.dropErrorMessage);
+	          return waitForExecuting(0);
+	        });
+	      })) : this.schedule({
+	        priority: NUM_PRIORITIES$1 - 1,
+	        weight: 0
+	      }, () => {
+	        return waitForExecuting(1);
+	      });
+	      this._receive = fu

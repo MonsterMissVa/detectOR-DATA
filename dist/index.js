@@ -7504,4 +7504,35 @@ function removeHook(state, name, method) {
 	    }
 
 	    async updateSettings(options = {}) {
-	      await this._store.__updateSettings__
+	      await this._store.__updateSettings__(parser$5.overwrite(options, this.storeDefaults));
+	      parser$5.overwrite(options, this.instanceDefaults, this);
+	      return this;
+	    }
+
+	    currentReservoir() {
+	      return this._store.__currentReservoir__();
+	    }
+
+	    incrementReservoir(incr = 0) {
+	      return this._store.__incrementReservoir__(incr);
+	    }
+
+	  }
+	  Bottleneck.default = Bottleneck;
+
+	  Bottleneck.Events = Events$4;
+
+	  Bottleneck.version = Bottleneck.prototype.version = require$$8.version;
+
+	  Bottleneck.strategy = Bottleneck.prototype.strategy = {
+	    LEAK: 1,
+	    OVERFLOW: 2,
+	    OVERFLOW_PRIORITY: 4,
+	    BLOCK: 3
+	  };
+
+	  Bottleneck.BottleneckError = Bottleneck.prototype.BottleneckError = BottleneckError_1;
+
+	  Bottleneck.Group = Bottleneck.prototype.Group = Group_1;
+
+	  Bottleneck.

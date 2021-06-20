@@ -7535,4 +7535,33 @@ function removeHook(state, name, method) {
 
 	  Bottleneck.Group = Bottleneck.prototype.Group = Group_1;
 
-	  Bottleneck.
+	  Bottleneck.RedisConnection = Bottleneck.prototype.RedisConnection = require$$2;
+
+	  Bottleneck.IORedisConnection = Bottleneck.prototype.IORedisConnection = require$$3;
+
+	  Bottleneck.Batcher = Bottleneck.prototype.Batcher = Batcher_1;
+
+	  Bottleneck.prototype.jobDefaults = {
+	    priority: DEFAULT_PRIORITY$1,
+	    weight: 1,
+	    expiration: null,
+	    id: "<no-id>"
+	  };
+
+	  Bottleneck.prototype.storeDefaults = {
+	    maxConcurrent: null,
+	    minTime: 0,
+	    highWater: null,
+	    strategy: Bottleneck.prototype.strategy.LEAK,
+	    penalty: null,
+	    reservoir: null,
+	    reservoirRefreshInterval: null,
+	    reservoirRefreshAmount: null,
+	    reservoirIncreaseInterval: null,
+	    reservoirIncreaseAmount: null,
+	    reservoirIncreaseMaximum: null
+	  };
+
+	  Bottleneck.prototype.localStoreDefaults = {
+	    Promise: Promise,
+	    timeout: n

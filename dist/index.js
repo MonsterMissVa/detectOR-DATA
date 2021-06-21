@@ -7793,4 +7793,40 @@ if (isWindows) {
 
 // Regex to find the device root, including trailing slash. E.g. 'c:\\'.
 if (isWindows) {
-  var splitRootRe =
+  var splitRootRe = /^(?:[a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/][^\\\/]+)?[\\\/]*/;
+} else {
+  var splitRootRe = /^[\/]*/;
+}
+
+exports.realpathSync = function realpathSync(p, cache) {
+  // make p is absolute
+  p = pathModule.resolve(p);
+
+  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
+    return cache[p];
+  }
+
+  var original = p,
+      seenLinks = {},
+      knownHard = {};
+
+  // current character position in p
+  var pos;
+  // the partial path so far, including a trailing slash if any
+  var current;
+  // the partial path without a trailing slash (except when pointing at a root)
+  var base;
+  // the partial path scanned in the previous round, with slash
+  var previous;
+
+  start();
+
+  function start() {
+    // Skip over roots
+    var m = splitRootRe.exec(p);
+    pos = m[0].length;
+    current = m[0];
+    base = m[0];
+    previous = '';
+
+ 

@@ -7879,4 +7879,39 @@ exports.realpathSync = function realpathSync(p, cache) {
         linkTarget = fs.readlinkSync(base);
       }
       resolvedLink = pathModule.resolve(previous, linkTarget);
-      // track this, if giv
+      // track this, if given a cache.
+      if (cache) cache[base] = resolvedLink;
+      if (!isWindows) seenLinks[id] = linkTarget;
+    }
+
+    // resolve the link, then start over
+    p = pathModule.resolve(resolvedLink, p.slice(pos));
+    start();
+  }
+
+  if (cache) cache[original] = p;
+
+  return p;
+};
+
+
+exports.realpath = function realpath(p, cache, cb) {
+  if (typeof cb !== 'function') {
+    cb = maybeCallback(cache);
+    cache = null;
+  }
+
+  // make p is absolute
+  p = pathModule.resolve(p);
+
+  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
+    return process.nextTick(cb.bind(null, null, cache[p]));
+  }
+
+  var original = p,
+      seenLinks = {},
+      knownHard = {};
+
+  // current character position in p
+  var pos;
+  // the partial path so far, including a trailin

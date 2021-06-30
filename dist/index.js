@@ -8122,4 +8122,26 @@ function setopts (self, pattern, options) {
   self.root = options.root || path.resolve(self.cwd, "/")
   self.root = path.resolve(self.root)
 
-  // TODO: 
+  // TODO: is an absolute `cwd` supposed to be resolved against `root`?
+  // e.g. { cwd: '/test', root: __dirname } === path.join(__dirname, '/test')
+  self.cwdAbs = isAbsolute(self.cwd) ? self.cwd : makeAbs(self, self.cwd)
+  self.nomount = !!options.nomount
+
+  if (process.platform === "win32") {
+    self.root = self.root.replace(/\\/g, "/")
+    self.cwd = self.cwd.replace(/\\/g, "/")
+    self.cwdAbs = self.cwdAbs.replace(/\\/g, "/")
+  }
+
+  // disable comments and negation in Minimatch.
+  // Note that they are not supported in Glob itself anyway.
+  options.nonegate = true
+  options.nocomment = true
+  // always treat \ in patterns as escapes, not path separators
+  options.allowWindowsEscape = true
+
+  self.minimatch = new Minimatch(pattern, options)
+  self.options = self.minimatch.options
+}
+
+function finish (self) {

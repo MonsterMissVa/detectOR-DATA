@@ -8302,4 +8302,24 @@ function childrenIgnored (self, path) {
 //     for ENTRY in ENTRIES (not dotfiles, unless pattern[n] is dot)
 //       Test ENTRY against pattern[n]
 //       If fails, continue
-//       If passes, PROCESS(pattern[0..n] + item
+//       If passes, PROCESS(pattern[0..n] + item + pattern[n+1 .. $])
+//
+// Caveat:
+//   Cache all stats and readdirs results to minimize syscall.  Since all
+//   we ever care about is existence and directory-ness, we can just keep
+//   `true` for files, and [children,...] for directories, or `false` for
+//   things that don't exist.
+
+module.exports = glob
+
+var rp = __nccwpck_require__(6863)
+var minimatch = __nccwpck_require__(6453)
+var Minimatch = minimatch.Minimatch
+var inherits = __nccwpck_require__(4124)
+var EE = (__nccwpck_require__(2361).EventEmitter)
+var path = __nccwpck_require__(1017)
+var assert = __nccwpck_require__(9491)
+var isAbsolute = (__nccwpck_require__(1017).isAbsolute)
+var globSync = __nccwpck_require__(9010)
+var common = __nccwpck_require__(7625)
+var setopts = common.setopt

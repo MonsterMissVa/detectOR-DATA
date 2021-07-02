@@ -8322,4 +8322,37 @@ var assert = __nccwpck_require__(9491)
 var isAbsolute = (__nccwpck_require__(1017).isAbsolute)
 var globSync = __nccwpck_require__(9010)
 var common = __nccwpck_require__(7625)
-var setopts = common.setopt
+var setopts = common.setopts
+var ownProp = common.ownProp
+var inflight = __nccwpck_require__(2492)
+var util = __nccwpck_require__(3837)
+var childrenIgnored = common.childrenIgnored
+var isIgnored = common.isIgnored
+
+var once = __nccwpck_require__(1223)
+
+function glob (pattern, options, cb) {
+  if (typeof options === 'function') cb = options, options = {}
+  if (!options) options = {}
+
+  if (options.sync) {
+    if (cb)
+      throw new TypeError('callback provided to sync glob')
+    return globSync(pattern, options)
+  }
+
+  return new Glob(pattern, options, cb)
+}
+
+glob.sync = globSync
+var GlobSync = glob.GlobSync = globSync.GlobSync
+
+// old api surface
+glob.glob = glob
+
+function extend (origin, add) {
+  if (add === null || typeof add !== 'object') {
+    return origin
+  }
+
+  var keys = Ob

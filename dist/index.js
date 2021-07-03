@@ -8547,4 +8547,38 @@ Glob.prototype.resume = function () {
     if (this._emitQueue.length) {
       var eq = this._emitQueue.slice(0)
       this._emitQueue.length = 0
-      for (va
+      for (var i = 0; i < eq.length; i ++) {
+        var e = eq[i]
+        this._emitMatch(e[0], e[1])
+      }
+    }
+    if (this._processQueue.length) {
+      var pq = this._processQueue.slice(0)
+      this._processQueue.length = 0
+      for (var i = 0; i < pq.length; i ++) {
+        var p = pq[i]
+        this._processing--
+        this._process(p[0], p[1], p[2], p[3])
+      }
+    }
+  }
+}
+
+Glob.prototype._process = function (pattern, index, inGlobStar, cb) {
+  assert(this instanceof Glob)
+  assert(typeof cb === 'function')
+
+  if (this.aborted)
+    return
+
+  this._processing++
+  if (this.paused) {
+    this._processQueue.push([pattern, index, inGlobStar, cb])
+    return
+  }
+
+  //console.error('PROCESS %d', this._processing, pattern)
+
+  // Get the first [n] parts of pattern that are all strings.
+  var n = 0
+  while (

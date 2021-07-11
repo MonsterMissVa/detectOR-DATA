@@ -9286,4 +9286,35 @@ module.exports = isWindows ? { sep: '\\' } : { sep: '/' }
 /***/ }),
 
 /***/ 6453:
-/***/ ((module, __
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const minimatch = module.exports = (p, pattern, options = {}) => {
+  assertValidPattern(pattern)
+
+  // shortcut: comments match nothing.
+  if (!options.nocomment && pattern.charAt(0) === '#') {
+    return false
+  }
+
+  return new Minimatch(pattern, options).match(p)
+}
+
+module.exports = minimatch
+
+const path = __nccwpck_require__(3438)
+minimatch.sep = path.sep
+
+const GLOBSTAR = Symbol('globstar **')
+minimatch.GLOBSTAR = GLOBSTAR
+const expand = __nccwpck_require__(1046)
+
+const plTypes = {
+  '!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
+  '?': { open: '(?:', close: ')?' },
+  '+': { open: '(?:', close: ')+' },
+  '*': { open: '(?:', close: ')*' },
+  '@': { open: '(?:', close: ')' }
+}
+
+// any single thing other than /
+// don't need to escape / when usi

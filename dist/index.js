@@ -9213,4 +9213,34 @@ function expand(str, isTop) {
     var N;
 
     if (isSequence) {
-      var x = nu
+      var x = numeric(n[0]);
+      var y = numeric(n[1]);
+      var width = Math.max(n[0].length, n[1].length)
+      var incr = n.length == 3
+        ? Math.abs(numeric(n[2]))
+        : 1;
+      var test = lte;
+      var reverse = y < x;
+      if (reverse) {
+        incr *= -1;
+        test = gte;
+      }
+      var pad = n.some(isPadded);
+
+      N = [];
+
+      for (var i = x; test(i, y); i += incr) {
+        var c;
+        if (isAlphaSequence) {
+          c = String.fromCharCode(i);
+          if (c === '\\')
+            c = '';
+        } else {
+          c = String(i);
+          if (pad) {
+            var need = width - c.length;
+            if (need > 0) {
+              var z = new Array(need + 1).join('0');
+              if (i < 0)
+                c = '-' + z + c.slice(1);
+              else

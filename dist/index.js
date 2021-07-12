@@ -9424,4 +9424,26 @@ const assertValidPattern = pattern => {
 // At this point, no pattern may contain "/" in it
 // so we're going to return a 2d array, where each entry is the full
 // pattern, split on '/', and then turned into a regular expression.
-// A regexp is made at the end which join
+// A regexp is made at the end which joins each array with an
+// escaped /, and another full one which joins each regexp with |.
+//
+// Following the lead of Bash 4.1, note that "**" only has special meaning
+// when it is the *only* thing in a path portion.  Otherwise, any series
+// of * is equivalent to a single *.  Globstar behavior is enabled by
+// default, and can be disabled by setting options.noglobstar.
+const SUBPARSE = Symbol('subparse')
+
+minimatch.makeRe = (pattern, options) =>
+  new Minimatch(pattern, options || {}).makeRe()
+
+minimatch.match = (list, pattern, options = {}) => {
+  const mm = new Minimatch(pattern, options)
+  list = list.filter(f => mm.match(f))
+  if (mm.options.nonull && !list.length) {
+    list.push(pattern)
+  }
+  return list
+}
+
+// replace stuff like \* with *
+const globUnescape = s => 

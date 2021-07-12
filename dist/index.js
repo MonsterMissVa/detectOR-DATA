@@ -9446,4 +9446,30 @@ minimatch.match = (list, pattern, options = {}) => {
 }
 
 // replace stuff like \* with *
-const globUnescape = s => 
+const globUnescape = s => s.replace(/\\(.)/g, '$1')
+const charUnescape = s => s.replace(/\\([^-\]])/g, '$1')
+const regExpEscape = s => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+const braExpEscape = s => s.replace(/[[\]\\]/g, '\\$&')
+
+class Minimatch {
+  constructor (pattern, options) {
+    assertValidPattern(pattern)
+
+    if (!options) options = {}
+
+    this.options = options
+    this.set = []
+    this.pattern = pattern
+    this.windowsPathsNoEscape = !!options.windowsPathsNoEscape ||
+      options.allowWindowsEscape === false
+    if (this.windowsPathsNoEscape) {
+      this.pattern = this.pattern.replace(/\\/g, '/')
+    }
+    this.regexp = null
+    this.negate = false
+    this.comment = false
+    this.empty = false
+    this.partial = !!options.partial
+
+    // make the set of regexps etc.
+    this.make()

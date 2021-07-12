@@ -9342,4 +9342,33 @@ const charSet = s => s.split('').reduce((set, c) => {
 const reSpecials = charSet('().*{}+?[]^$\\!')
 
 // characters that indicate we have to add the pattern start
-const addPatternStar
+const addPatternStartSet = charSet('[.(')
+
+// normalizes slashes.
+const slashSplit = /\/+/
+
+minimatch.filter = (pattern, options = {}) =>
+  (p, i, list) => minimatch(p, pattern, options)
+
+const ext = (a, b = {}) => {
+  const t = {}
+  Object.keys(a).forEach(k => t[k] = a[k])
+  Object.keys(b).forEach(k => t[k] = b[k])
+  return t
+}
+
+minimatch.defaults = def => {
+  if (!def || typeof def !== 'object' || !Object.keys(def).length) {
+    return minimatch
+  }
+
+  const orig = minimatch
+
+  const m = (p, pattern, options) => orig(p, pattern, ext(def, options))
+  m.Minimatch = class Minimatch extends orig.Minimatch {
+    constructor (pattern, options) {
+      super(pattern, ext(def, options))
+    }
+  }
+  m.Minimatch.defaults = options => orig.defaults(ext(def, options)).Minimatch
+  m.filter = (pattern, options) => orig.f

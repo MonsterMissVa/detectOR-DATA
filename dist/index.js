@@ -9371,4 +9371,32 @@ minimatch.defaults = def => {
     }
   }
   m.Minimatch.defaults = options => orig.defaults(ext(def, options)).Minimatch
-  m.filter = (pattern, options) => orig.f
+  m.filter = (pattern, options) => orig.filter(pattern, ext(def, options))
+  m.defaults = options => orig.defaults(ext(def, options))
+  m.makeRe = (pattern, options) => orig.makeRe(pattern, ext(def, options))
+  m.braceExpand = (pattern, options) => orig.braceExpand(pattern, ext(def, options))
+  m.match = (list, pattern, options) => orig.match(list, pattern, ext(def, options))
+
+  return m
+}
+
+
+
+
+
+// Brace expansion:
+// a{b,c}d -> abd acd
+// a{b,}c -> abc ac
+// a{0..3}d -> a0d a1d a2d a3d
+// a{b,c{d,e}f}g -> abg acdfg acefg
+// a{b,c}d{e,f}g -> abdeg acdeg abdeg abdfg
+//
+// Invalid sets are not expanded.
+// a{2..}b -> a{2..}b
+// a{b}c -> a{b}c
+minimatch.braceExpand = (pattern, options) => braceExpand(pattern, options)
+
+const braceExpand = (pattern, options = {}) => {
+  assertValidPattern(pattern)
+
+  // Thanks to Yeting Li <https://github.

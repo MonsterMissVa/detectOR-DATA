@@ -9615,4 +9615,21 @@ class Minimatch {
         while (fr < fl) {
           var swallowee = file[fr]
 
-    
+          this.debug('\nglobstar while', file, fr, pattern, pr, swallowee)
+
+          // XXX remove this slice.  Just pass the start index.
+          if (this.matchOne(file.slice(fr), pattern.slice(pr), partial)) {
+            this.debug('globstar found match!', fr, fl, swallowee)
+            // found a match.
+            return true
+          } else {
+            // can't swallow "." or ".." ever.
+            // can only swallow ".foo" when explicitly asked.
+            if (swallowee === '.' || swallowee === '..' ||
+              (!options.dot && swallowee.charAt(0) === '.')) {
+              this.debug('dot detected!', file, fr, pattern, pr)
+              break
+            }
+
+            // ** swallows a segment, and continue.
+ 

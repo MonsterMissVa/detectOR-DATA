@@ -9764,4 +9764,42 @@ class Minimatch {
       // skip over any that are escaped.
       if (escaping) {
         /* istanbul ignore next - completely not allowed, even escaped. */
-        if (c ===
+        if (c === '/') {
+          return false
+        }
+
+        if (reSpecials[c]) {
+          re += '\\'
+        }
+        re += c
+        escaping = false
+        continue
+      }
+
+      switch (c) {
+        /* istanbul ignore next */
+        case '/': {
+          // Should already be path-split by now.
+          return false
+        }
+
+        case '\\':
+          if (inClass && pattern.charAt(i + 1) === '-') {
+            re += c
+            continue
+          }
+
+          clearStateChar()
+          escaping = true
+        continue
+
+        // the various stateChar values
+        // for the "extglob" stuff.
+        case '?':
+        case '*':
+        case '+':
+        case '@':
+        case '!':
+          this.debug('%s\t%s %s %j <-- stateChar', pattern, i, re, c)
+
+          // all of those are litera

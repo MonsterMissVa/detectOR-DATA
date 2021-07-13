@@ -9705,4 +9705,33 @@ class Minimatch {
   parse (pattern, isSub) {
     assertValidPattern(pattern)
 
-    const options = this.optio
+    const options = this.options
+
+    // shortcuts
+    if (pattern === '**') {
+      if (!options.noglobstar)
+        return GLOBSTAR
+      else
+        pattern = '*'
+    }
+    if (pattern === '') return ''
+
+    let re = ''
+    let hasMagic = !!options.nocase
+    let escaping = false
+    // ? => one single character
+    const patternListStack = []
+    const negativeLists = []
+    let stateChar
+    let inClass = false
+    let reClassStart = -1
+    let classStart = -1
+    let cs
+    let pl
+    let sp
+    // . and .. never match anything that doesn't start with .,
+    // even when options.dot is set.
+    const patternStart = pattern.charAt(0) === '.' ? '' // anything
+    // not (start or / followed by . or .. followed by / or end)
+    : options.dot ? '(?!(?:^|\\\/)\\.{1,2}(?:$|\\\/))'
+    : '(?!\\.)'

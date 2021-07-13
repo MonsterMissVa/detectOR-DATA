@@ -9735,3 +9735,33 @@ class Minimatch {
     // not (start or / followed by . or .. followed by / or end)
     : options.dot ? '(?!(?:^|\\\/)\\.{1,2}(?:$|\\\/))'
     : '(?!\\.)'
+
+    const clearStateChar = () => {
+      if (stateChar) {
+        // we had some state-tracking character
+        // that wasn't consumed by this pass.
+        switch (stateChar) {
+          case '*':
+            re += star
+            hasMagic = true
+          break
+          case '?':
+            re += qmark
+            hasMagic = true
+          break
+          default:
+            re += '\\' + stateChar
+          break
+        }
+        this.debug('clearStateChar %j %j', stateChar, re)
+        stateChar = false
+      }
+    }
+
+    for (let i = 0, c; (i < pattern.length) && (c = pattern.charAt(i)); i++) {
+      this.debug('%s\t%s %s %j', pattern, i, re, c)
+
+      // skip over any that are escaped.
+      if (escaping) {
+        /* istanbul ignore next - completely not allowed, even escaped. */
+        if (c ===

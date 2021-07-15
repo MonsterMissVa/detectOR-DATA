@@ -9854,4 +9854,38 @@ class Minimatch {
           }
 
           clearStateChar()
-          hasMa
+          hasMagic = true
+          pl = patternListStack.pop()
+          // negation is (?:(?!js)[^/]*)
+          // The others are (?:<pattern>)<type>
+          re += pl.close
+          if (pl.type === '!') {
+            negativeLists.push(pl)
+          }
+          pl.reEnd = re.length
+        continue
+
+        case '|':
+          if (inClass || !patternListStack.length) {
+            re += '\\|'
+            continue
+          }
+
+          clearStateChar()
+          re += '|'
+        continue
+
+        // these are mostly the same in regexp and glob
+        case '[':
+          // swallow any state-tracking char before the [
+          clearStateChar()
+
+          if (inClass) {
+            re += '\\' + c
+            continue
+          }
+
+          inClass = true
+          classStart = i
+          reClassStart = re.length
+     

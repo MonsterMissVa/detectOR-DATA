@@ -9821,4 +9821,37 @@ class Minimatch {
           // just clear the statechar *now*, rather than even diving into
           // the patternList stuff.
           if (options.noext) clearStateChar()
-       
+        continue
+
+        case '(':
+          if (inClass) {
+            re += '('
+            continue
+          }
+
+          if (!stateChar) {
+            re += '\\('
+            continue
+          }
+
+          patternListStack.push({
+            type: stateChar,
+            start: i - 1,
+            reStart: re.length,
+            open: plTypes[stateChar].open,
+            close: plTypes[stateChar].close
+          })
+          // negation is (?:(?!js)[^/]*)
+          re += stateChar === '!' ? '(?:(?!(?:' : '(?:'
+          this.debug('plType %j %j', stateChar, re)
+          stateChar = false
+        continue
+
+        case ')':
+          if (inClass || !patternListStack.length) {
+            re += '\\)'
+            continue
+          }
+
+          clearStateChar()
+          hasMa

@@ -9969,4 +9969,31 @@ class Minimatch {
 
         // need to escape all those slashes *again*, without escaping the
         // one that we need for escaping the | character.  As it works out,
+        // escaping an even number of slashes can be done by simply repeating
+        // it exactly after itself.  That's why this trick works.
         //
+        // I am sorry that you have to see this.
+        return $1 + $1 + $2 + '|'
+      })
+
+      this.debug('tail=%j\n   %s', tail, tail, pl, re)
+      const t = pl.type === '*' ? star
+        : pl.type === '?' ? qmark
+        : '\\' + pl.type
+
+      hasMagic = true
+      re = re.slice(0, pl.reStart) + t + '\\(' + tail
+    }
+
+    // handle trailing things that only matter at the very end.
+    clearStateChar()
+    if (escaping) {
+      // trailing \\
+      re += '\\\\'
+    }
+
+    // only need to apply the nodot start if the re starts with
+    // something that could conceivably capture a dot
+    const addPatternStart = addPatternStartSet[re.charAt(0)]
+
+    // Hack to work ar

@@ -10062,4 +10062,28 @@ class Minimatch {
   }
 
   makeRe () {
-    if (this.regexp || this.regexp === false) ret
+    if (this.regexp || this.regexp === false) return this.regexp
+
+    // at this point, this.set is a 2d array of partial
+    // pattern strings, or "**".
+    //
+    // It's better to use .match().  This function shouldn't
+    // be used, really, but it's pretty convenient sometimes,
+    // when you just want to work with a regex.
+    const set = this.set
+
+    if (!set.length) {
+      this.regexp = false
+      return this.regexp
+    }
+    const options = this.options
+
+    const twoStar = options.noglobstar ? star
+      : options.dot ? twoStarDot
+      : twoStarNoDot
+    const flags = options.nocase ? 'i' : ''
+
+    // coalesce globstars and regexpify non-globstar patterns
+    // if it's the only item, then we just do one twoStar
+    // if it's the first, and there are more, prepend (\/|twoStar\/)? to next
+    // if

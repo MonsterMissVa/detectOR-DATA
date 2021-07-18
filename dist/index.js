@@ -9952,4 +9952,21 @@ class Minimatch {
     // handle the case where we had a +( thing at the *end*
     // of the pattern.
     // each pattern list stack adds 3 chars, and we need to go through
-    // and escape any | chars that were passed through as-is for
+    // and escape any | chars that were passed through as-is for the regexp.
+    // Go through and escape them, taking care not to double-escape any
+    // | chars that were already escaped.
+    for (pl = patternListStack.pop(); pl; pl = patternListStack.pop()) {
+      let tail
+      tail = re.slice(pl.reStart + pl.open.length)
+      this.debug('setting tail', re, pl)
+      // maybe some even number of \, then maybe 1 \, followed by a |
+      tail = tail.replace(/((?:\\{2}){0,64})(\\?)\|/g, (_, $1, $2) => {
+        /* istanbul ignore else - should already be done */
+        if (!$2) {
+          // the | isn't already escaped, so escape it.
+          $2 = '\\'
+        }
+
+        // need to escape all those slashes *again*, without escaping the
+        // one that we need for escaping the | character.  As it works out,
+        //

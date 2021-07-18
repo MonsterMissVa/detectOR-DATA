@@ -10110,4 +10110,33 @@ class Minimatch {
           } else {
             pattern[i] = twoStar
           }
-        } else if (i === p
+        } else if (i === pattern.length - 1) {
+          pattern[i-1] += '(?:\\\/|' + twoStar + ')?'
+        } else {
+          pattern[i-1] += '(?:\\\/|\\\/' + twoStar + '\\\/)' + pattern[i+1]
+          pattern[i+1] = GLOBSTAR
+        }
+      })
+      return pattern.filter(p => p !== GLOBSTAR).join('/')
+    }).join('|')
+
+    // must match entire pattern
+    // ending in a * or ** will make it less strict.
+    re = '^(?:' + re + ')$'
+
+    // can match anything, as long as it's not this.
+    if (this.negate) re = '^(?!' + re + ').*$'
+
+    try {
+      this.regexp = new RegExp(re, flags)
+    } catch (ex) /* istanbul ignore next - should be impossible */ {
+      this.regexp = false
+    }
+    return this.regexp
+  }
+
+  match (f, partial = this.partial) {
+    this.debug('match', f, this.pattern)
+    // short-circuit in the case of busted things.
+    // comments, etc.
+  

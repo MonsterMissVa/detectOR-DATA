@@ -10039,4 +10039,27 @@ class Minimatch {
       return [re, hasMagic]
     }
 
-    // skip the regexp for non-magical patt
+    // skip the regexp for non-magical patterns
+    // unescape anything in it, though, so that it'll be
+    // an exact match against a file etc.
+    if (!hasMagic) {
+      return globUnescape(pattern)
+    }
+
+    const flags = options.nocase ? 'i' : ''
+    try {
+      return Object.assign(new RegExp('^' + re + '$', flags), {
+        _glob: pattern,
+        _src: re,
+      })
+    } catch (er) /* istanbul ignore next - should be impossible */ {
+      // If it was an invalid regular expression, then it can't match
+      // anything.  This trick looks for a character after the end of
+      // the string, which is of course impossible, except in multi-line
+      // mode, but it's not a /m regex.
+      return new RegExp('$.')
+    }
+  }
+
+  makeRe () {
+    if (this.regexp || this.regexp === false) ret

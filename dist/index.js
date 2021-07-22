@@ -10206,4 +10206,25 @@ module.exports = globSync
 globSync.GlobSync = GlobSync
 
 var rp = __nccwpck_require__(6863)
-var m
+var minimatch = __nccwpck_require__(6453)
+var Minimatch = minimatch.Minimatch
+var Glob = (__nccwpck_require__(1957).Glob)
+var util = __nccwpck_require__(3837)
+var path = __nccwpck_require__(1017)
+var assert = __nccwpck_require__(9491)
+var isAbsolute = (__nccwpck_require__(1017).isAbsolute)
+var common = __nccwpck_require__(7625)
+var setopts = common.setopts
+var ownProp = common.ownProp
+var childrenIgnored = common.childrenIgnored
+var isIgnored = common.isIgnored
+
+function globSync (pattern, options) {
+  if (typeof options === 'function' || arguments.length === 3)
+    throw new TypeError('callback provided to sync glob\n'+
+                        'See: https://github.com/isaacs/node-glob/issues/167')
+
+  return new GlobSync(pattern, options).found
+}
+
+fu

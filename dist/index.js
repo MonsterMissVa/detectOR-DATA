@@ -10485,4 +10485,38 @@ GlobSync.prototype._readdir = function (abs, inGlobStar) {
       return null
 
     if (Array.isArray(c))
-      
+      return c
+  }
+
+  try {
+    return this._readdirEntries(abs, this.fs.readdirSync(abs))
+  } catch (er) {
+    this._readdirError(abs, er)
+    return null
+  }
+}
+
+GlobSync.prototype._readdirEntries = function (abs, entries) {
+  // if we haven't asked to stat everything, then just
+  // assume that everything in there exists, so we can avoid
+  // having to stat it a second time.
+  if (!this.mark && !this.stat) {
+    for (var i = 0; i < entries.length; i ++) {
+      var e = entries[i]
+      if (abs === '/')
+        e = abs + e
+      else
+        e = abs + '/' + e
+      this.cache[e] = true
+    }
+  }
+
+  this.cache[abs] = entries
+
+  // mark and cache dir-ness
+  return entries
+}
+
+GlobSync.prototype._readdirError = function (f, er) {
+  // handle errors, and cache the information
+  switch (er.

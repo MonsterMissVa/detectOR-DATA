@@ -10906,4 +10906,37 @@ class Blob {
 
 		this[BUFFER] = Buffer.concat(buffers);
 
-		let type = o
+		let type = options && options.type !== undefined && String(options.type).toLowerCase();
+		if (type && !/[^\u0020-\u007E]/.test(type)) {
+			this[TYPE] = type;
+		}
+	}
+	get size() {
+		return this[BUFFER].length;
+	}
+	get type() {
+		return this[TYPE];
+	}
+	text() {
+		return Promise.resolve(this[BUFFER].toString());
+	}
+	arrayBuffer() {
+		const buf = this[BUFFER];
+		const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+		return Promise.resolve(ab);
+	}
+	stream() {
+		const readable = new Readable();
+		readable._read = function () {};
+		readable.push(this[BUFFER]);
+		readable.push(null);
+		return readable;
+	}
+	toString() {
+		return '[object Blob]';
+	}
+	slice() {
+		const size = this.size;
+
+		const start = arguments[0];
+		const e

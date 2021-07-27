@@ -10939,4 +10939,33 @@ class Blob {
 		const size = this.size;
 
 		const start = arguments[0];
-		const e
+		const end = arguments[1];
+		let relativeStart, relativeEnd;
+		if (start === undefined) {
+			relativeStart = 0;
+		} else if (start < 0) {
+			relativeStart = Math.max(size + start, 0);
+		} else {
+			relativeStart = Math.min(start, size);
+		}
+		if (end === undefined) {
+			relativeEnd = size;
+		} else if (end < 0) {
+			relativeEnd = Math.max(size + end, 0);
+		} else {
+			relativeEnd = Math.min(end, size);
+		}
+		const span = Math.max(relativeEnd - relativeStart, 0);
+
+		const buffer = this[BUFFER];
+		const slicedBuffer = buffer.slice(relativeStart, relativeStart + span);
+		const blob = new Blob([], { type: arguments[2] });
+		blob[BUFFER] = slicedBuffer;
+		return blob;
+	}
+}
+
+Object.defineProperties(Blob.prototype, {
+	size: { enumerable: true },
+	type: { enumerable: true },
+	slice: { enumerable: tru

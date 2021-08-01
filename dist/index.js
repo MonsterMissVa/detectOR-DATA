@@ -11527,4 +11527,42 @@ const invalidHeaderCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
 function validateName(name) {
 	name = `${name}`;
 	if (invalidTokenRegex.test(name) || name === '') {
-		throw new TypeError(`${name} is not a legal HTTP header
+		throw new TypeError(`${name} is not a legal HTTP header name`);
+	}
+}
+
+function validateValue(value) {
+	value = `${value}`;
+	if (invalidHeaderCharRegex.test(value)) {
+		throw new TypeError(`${value} is not a legal HTTP header value`);
+	}
+}
+
+/**
+ * Find the key in the map object given a header name.
+ *
+ * Returns undefined if not found.
+ *
+ * @param   String  name  Header name
+ * @return  String|Undefined
+ */
+function find(map, name) {
+	name = name.toLowerCase();
+	for (const key in map) {
+		if (key.toLowerCase() === name) {
+			return key;
+		}
+	}
+	return undefined;
+}
+
+const MAP = Symbol('map');
+class Headers {
+	/**
+  * Headers class
+  *
+  * @param   Object  headers  Response headers
+  * @return  Void
+  */
+	constructor() {
+		let init = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;

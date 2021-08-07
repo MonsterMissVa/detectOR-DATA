@@ -12373,4 +12373,26 @@ function fetch(url, opts) {
 				// HTTP fetch step 5.5
 				switch (request.redirect) {
 					case 'error':
-						reject
+						reject(new FetchError(`uri requested responds with a redirect, redirect mode is set to error: ${request.url}`, 'no-redirect'));
+						finalize();
+						return;
+					case 'manual':
+						// node-fetch-specific step: make manual redirect a bit easier to use by setting the Location header value to the resolved URL.
+						if (locationURL !== null) {
+							// handle corrupted header
+							try {
+								headers.set('Location', locationURL);
+							} catch (err) {
+								// istanbul ignore next: nodejs server prevent invalid response headers, we can't test this through normal request
+								reject(err);
+							}
+						}
+						break;
+					case 'follow':
+						// HTTP-redirect fetch step 2
+						if (locationURL === null) {
+							break;
+						}
+
+						// HTTP-redirect fetch step 5
+						if (requ

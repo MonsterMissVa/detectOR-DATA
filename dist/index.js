@@ -12351,4 +12351,26 @@ function fetch(url, opts) {
 			const headers = createHeadersLenient(res.headers);
 
 			// HTTP fetch step 5
-			if (fetch.isR
+			if (fetch.isRedirect(res.statusCode)) {
+				// HTTP fetch step 5.2
+				const location = headers.get('Location');
+
+				// HTTP fetch step 5.3
+				let locationURL = null;
+				try {
+					locationURL = location === null ? null : new URL$1(location, request.url).toString();
+				} catch (err) {
+					// error here can only be invalid URL in Location: header
+					// do not throw when options.redirect == manual
+					// let the user extract the errorneous redirect URL
+					if (request.redirect !== 'manual') {
+						reject(new FetchError(`uri requested responds with an invalid redirect URL: ${location}`, 'invalid-redirect'));
+						finalize();
+						return;
+					}
+				}
+
+				// HTTP fetch step 5.5
+				switch (request.redirect) {
+					case 'error':
+						reject

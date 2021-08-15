@@ -12802,4 +12802,40 @@ module.exports.PROCESSING_OPTIONS = PROCESSING_OPTIONS;
 /***/ }),
 
 /***/ 4294:
-/***/ ((module, __unused_webpack
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = __nccwpck_require__(4219);
+
+
+/***/ }),
+
+/***/ 4219:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+
+var net = __nccwpck_require__(1808);
+var tls = __nccwpck_require__(4404);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var events = __nccwpck_require__(2361);
+var assert = __nccwpck_require__(9491);
+var util = __nccwpck_require__(3837);
+
+
+exports.httpOverHttp = httpOverHttp;
+exports.httpsOverHttp = httpsOverHttp;
+exports.httpOverHttps = httpOverHttps;
+exports.httpsOverHttps = httpsOverHttps;
+
+
+function httpOverHttp(options) {
+  var agent = new TunnelingAgent(options);
+  agent.request = http.request;
+  return agent;
+}
+
+function httpsOverHttp(options) {
+  var agent = new TunnelingAgent(options);
+  agent.request = http.request;
+  agent

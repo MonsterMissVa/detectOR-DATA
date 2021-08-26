@@ -13457,4 +13457,28 @@ function v1(options, buf, offset) {
   // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
 
 
-  let msecs = options.msecs !== undefined ? options.msecs : Date.now(); // Per 4.2.1.2, use count of uuid's generated
+  let msecs = options.msecs !== undefined ? options.msecs : Date.now(); // Per 4.2.1.2, use count of uuid's generated during the current clock
+  // cycle to simulate higher resolution clock
+
+  let nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1; // Time since last uuid creation (in msecs)
+
+  const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 10000; // Per 4.2.1.2, Bump clockseq on clock regression
+
+  if (dt < 0 && options.clockseq === undefined) {
+    clockseq = clockseq + 1 & 0x3fff;
+  } // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+  // time interval
+
+
+  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
+    nsecs = 0;
+  } // Per 4.2.1.2 Throw error if too many uuids are requested
+
+
+  if (nsecs >= 10000) {
+    throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
+  }
+
+  _lastMSecs = msecs;
+  _lastNSecs = nsecs;
+  _clockseq = clockseq; 

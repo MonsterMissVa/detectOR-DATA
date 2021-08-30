@@ -13963,3 +13963,52 @@ exports.implementation = class URLImpl {
 
   get href() {
     return usm.serializeURL(this._url);
+  }
+
+  set href(v) {
+    const parsedURL = usm.basicURLParse(v);
+    if (parsedURL === "failure") {
+      throw new TypeError("Invalid URL");
+    }
+
+    this._url = parsedURL;
+  }
+
+  get origin() {
+    return usm.serializeURLOrigin(this._url);
+  }
+
+  get protocol() {
+    return this._url.scheme + ":";
+  }
+
+  set protocol(v) {
+    usm.basicURLParse(v + ":", { url: this._url, stateOverride: "scheme start" });
+  }
+
+  get username() {
+    return this._url.username;
+  }
+
+  set username(v) {
+    if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
+      return;
+    }
+
+    usm.setTheUsername(this._url, v);
+  }
+
+  get password() {
+    return this._url.password;
+  }
+
+  set password(v) {
+    if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
+      return;
+    }
+
+    usm.setThePassword(this._url, v);
+  }
+
+  get host() {
+    const url =

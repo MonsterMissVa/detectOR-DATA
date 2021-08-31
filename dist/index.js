@@ -14011,4 +14011,49 @@ exports.implementation = class URLImpl {
   }
 
   get host() {
-    const url =
+    const url = this._url;
+
+    if (url.host === null) {
+      return "";
+    }
+
+    if (url.port === null) {
+      return usm.serializeHost(url.host);
+    }
+
+    return usm.serializeHost(url.host) + ":" + usm.serializeInteger(url.port);
+  }
+
+  set host(v) {
+    if (this._url.cannotBeABaseURL) {
+      return;
+    }
+
+    usm.basicURLParse(v, { url: this._url, stateOverride: "host" });
+  }
+
+  get hostname() {
+    if (this._url.host === null) {
+      return "";
+    }
+
+    return usm.serializeHost(this._url.host);
+  }
+
+  set hostname(v) {
+    if (this._url.cannotBeABaseURL) {
+      return;
+    }
+
+    usm.basicURLParse(v, { url: this._url, stateOverride: "hostname" });
+  }
+
+  get port() {
+    if (this._url.port === null) {
+      return "";
+    }
+
+    return usm.serializeInteger(this._url.port);
+  }
+
+  set port

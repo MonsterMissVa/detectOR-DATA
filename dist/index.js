@@ -14486,4 +14486,31 @@ function isC0ControlPercentEncode(c) {
   return c <= 0x1F || c > 0x7E;
 }
 
-const extraPathPercentEncodeSet = new Set([32, 34, 35, 6
+const extraPathPercentEncodeSet = new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
+function isPathPercentEncode(c) {
+  return isC0ControlPercentEncode(c) || extraPathPercentEncodeSet.has(c);
+}
+
+const extraUserinfoPercentEncodeSet =
+  new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
+function isUserinfoPercentEncode(c) {
+  return isPathPercentEncode(c) || extraUserinfoPercentEncodeSet.has(c);
+}
+
+function percentEncodeChar(c, encodeSetPredicate) {
+  const cStr = String.fromCodePoint(c);
+
+  if (encodeSetPredicate(c)) {
+    return utf8PercentEncode(cStr);
+  }
+
+  return cStr;
+}
+
+function parseIPv4Number(input) {
+  let R = 10;
+
+  if (input.length >= 2 && input.charAt(0) === "0" && input.charAt(1).toLowerCase() === "x") {
+    input = input.substring(2);
+    R = 16;
+  } else 

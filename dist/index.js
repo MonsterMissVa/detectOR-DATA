@@ -14635,4 +14635,36 @@ function parseIPv6(input) {
     if (input[pointer] === 46) {
       if (length === 0) {
         return failure;
-    
+      }
+
+      pointer -= length;
+
+      if (pieceIndex > 6) {
+        return failure;
+      }
+
+      let numbersSeen = 0;
+
+      while (input[pointer] !== undefined) {
+        let ipv4Piece = null;
+
+        if (numbersSeen > 0) {
+          if (input[pointer] === 46 && numbersSeen < 4) {
+            ++pointer;
+          } else {
+            return failure;
+          }
+        }
+
+        if (!isASCIIDigit(input[pointer])) {
+          return failure;
+        }
+
+        while (isASCIIDigit(input[pointer])) {
+          const number = parseInt(at(input, pointer));
+          if (ipv4Piece === null) {
+            ipv4Piece = number;
+          } else if (ipv4Piece === 0) {
+            return failure;
+          } else {
+            i

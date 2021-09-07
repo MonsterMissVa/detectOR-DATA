@@ -14704,3 +14704,33 @@ function parseIPv6(input) {
 
   if (compress !== null) {
     let swaps = pieceIndex - compress;
+    pieceIndex = 7;
+    while (pieceIndex !== 0 && swaps > 0) {
+      const temp = address[compress + swaps - 1];
+      address[compress + swaps - 1] = address[pieceIndex];
+      address[pieceIndex] = temp;
+      --pieceIndex;
+      --swaps;
+    }
+  } else if (compress === null && pieceIndex !== 8) {
+    return failure;
+  }
+
+  return address;
+}
+
+function serializeIPv6(address) {
+  let output = "";
+  const seqResult = findLongestZeroSequence(address);
+  const compress = seqResult.idx;
+  let ignore0 = false;
+
+  for (let pieceIndex = 0; pieceIndex <= 7; ++pieceIndex) {
+    if (ignore0 && address[pieceIndex] === 0) {
+      continue;
+    } else if (ignore0) {
+      ignore0 = false;
+    }
+
+    if (compress === pieceIndex) {
+      const separator = pieceIndex ===

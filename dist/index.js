@@ -14596,4 +14596,43 @@ function parseIPv6(input) {
   let compress = null;
   let pointer = 0;
 
-  input = punycode.ucs2.decode(inp
+  input = punycode.ucs2.decode(input);
+
+  if (input[pointer] === 58) {
+    if (input[pointer + 1] !== 58) {
+      return failure;
+    }
+
+    pointer += 2;
+    ++pieceIndex;
+    compress = pieceIndex;
+  }
+
+  while (pointer < input.length) {
+    if (pieceIndex === 8) {
+      return failure;
+    }
+
+    if (input[pointer] === 58) {
+      if (compress !== null) {
+        return failure;
+      }
+      ++pointer;
+      ++pieceIndex;
+      compress = pieceIndex;
+      continue;
+    }
+
+    let value = 0;
+    let length = 0;
+
+    while (length < 4 && isASCIIHex(input[pointer])) {
+      value = value * 0x10 + parseInt(at(input, pointer), 16);
+      ++pointer;
+      ++length;
+    }
+
+    if (input[pointer] === 46) {
+      if (length === 0) {
+        return failure;
+    

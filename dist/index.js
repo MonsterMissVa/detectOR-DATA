@@ -14939,4 +14939,31 @@ URLStateMachine.prototype["parse scheme start"] = function parseSchemeStart(c, c
     this.buffer += cStr.toLowerCase();
     this.state = "scheme";
   } else if (!this.stateOverride) {
-   
+    this.state = "no scheme";
+    --this.pointer;
+  } else {
+    this.parseError = true;
+    return failure;
+  }
+
+  return true;
+};
+
+URLStateMachine.prototype["parse scheme"] = function parseScheme(c, cStr) {
+  if (isASCIIAlphanumeric(c) || c === 43 || c === 45 || c === 46) {
+    this.buffer += cStr.toLowerCase();
+  } else if (c === 58) {
+    if (this.stateOverride) {
+      if (isSpecial(this.url) && !isSpecialScheme(this.buffer)) {
+        return false;
+      }
+
+      if (!isSpecial(this.url) && isSpecialScheme(this.buffer)) {
+        return false;
+      }
+
+      if ((includesCredentials(this.url) || this.url.port !== null) && this.buffer === "file") {
+        return false;
+      }
+
+      if (this.url.scheme === "file" && (this.url.host === "" || this.url

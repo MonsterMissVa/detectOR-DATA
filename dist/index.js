@@ -14913,4 +14913,30 @@ function URLStateMachine(input, base, encodingOverride, url, stateOverride) {
   this.state = stateOverride || "scheme start";
 
   this.buffer = "";
-  
+  this.atFlag = false;
+  this.arrFlag = false;
+  this.passwordTokenSeenFlag = false;
+
+  this.input = punycode.ucs2.decode(this.input);
+
+  for (; this.pointer <= this.input.length; ++this.pointer) {
+    const c = this.input[this.pointer];
+    const cStr = isNaN(c) ? undefined : String.fromCodePoint(c);
+
+    // exec state machine
+    const ret = this["parse " + this.state](c, cStr);
+    if (!ret) {
+      break; // terminate algorithm
+    } else if (ret === failure) {
+      this.failure = true;
+      break;
+    }
+  }
+}
+
+URLStateMachine.prototype["parse scheme start"] = function parseSchemeStart(c, cStr) {
+  if (isASCIIAlpha(c)) {
+    this.buffer += cStr.toLowerCase();
+    this.state = "scheme";
+  } else if (!this.stateOverride) {
+   

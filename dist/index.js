@@ -15095,4 +15095,31 @@ URLStateMachine.prototype["parse relative"] = function parseRelative(c) {
 };
 
 URLStateMachine.prototype["parse relative slash"] = function parseRelativeSlash(c) {
-  if (isSpecial(this.url) && (
+  if (isSpecial(this.url) && (c === 47 || c === 92)) {
+    if (c === 92) {
+      this.parseError = true;
+    }
+    this.state = "special authority ignore slashes";
+  } else if (c === 47) {
+    this.state = "authority";
+  } else {
+    this.url.username = this.base.username;
+    this.url.password = this.base.password;
+    this.url.host = this.base.host;
+    this.url.port = this.base.port;
+    this.state = "path";
+    --this.pointer;
+  }
+
+  return true;
+};
+
+URLStateMachine.prototype["parse special authority slashes"] = function parseSpecialAuthoritySlashes(c) {
+  if (c === 47 && this.input[this.pointer + 1] === 47) {
+    this.state = "special authority ignore slashes";
+    ++this.pointer;
+  } else {
+    this.parseError = true;
+    this.state = "special authority ignore slashes";
+    --this.pointer;
+  }

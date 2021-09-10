@@ -15151,4 +15151,31 @@ URLStateMachine.prototype["parse authority"] = function parseAuthority(c, cStr) 
     for (let pointer = 0; pointer < len; ++pointer) {
       const codePoint = this.buffer.codePointAt(pointer);
 
- 
+      if (codePoint === 58 && !this.passwordTokenSeenFlag) {
+        this.passwordTokenSeenFlag = true;
+        continue;
+      }
+      const encodedCodePoints = percentEncodeChar(codePoint, isUserinfoPercentEncode);
+      if (this.passwordTokenSeenFlag) {
+        this.url.password += encodedCodePoints;
+      } else {
+        this.url.username += encodedCodePoints;
+      }
+    }
+    this.buffer = "";
+  } else if (isNaN(c) || c === 47 || c === 63 || c === 35 ||
+             (isSpecial(this.url) && c === 92)) {
+    if (this.atFlag && this.buffer === "") {
+      this.parseError = true;
+      return failure;
+    }
+    this.pointer -= countSymbols(this.buffer) + 1;
+    this.buffer = "";
+    this.state = "host";
+  } else {
+    this.buffer += cStr;
+  }
+
+  return true;
+};
+

@@ -15313,4 +15313,30 @@ URLStateMachine.prototype["parse file"] = function parseFile(c) {
   return true;
 };
 
-URLStateMachine.prot
+URLStateMachine.prototype["parse file slash"] = function parseFileSlash(c) {
+  if (c === 47 || c === 92) {
+    if (c === 92) {
+      this.parseError = true;
+    }
+    this.state = "file host";
+  } else {
+    if (this.base !== null && this.base.scheme === "file") {
+      if (isNormalizedWindowsDriveLetterString(this.base.path[0])) {
+        this.url.path.push(this.base.path[0]);
+      } else {
+        this.url.host = this.base.host;
+      }
+    }
+    this.state = "path";
+    --this.pointer;
+  }
+
+  return true;
+};
+
+URLStateMachine.prototype["parse file host"] = function parseFileHost(c, cStr) {
+  if (isNaN(c) || c === 47 || c === 92 || c === 63 || c === 35) {
+    --this.pointer;
+    if (!this.stateOverride && isWindowsDriveLetterString(this.buffer)) {
+      this.parseError = true;
+      this.state = "pat

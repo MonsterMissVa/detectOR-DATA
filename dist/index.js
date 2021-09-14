@@ -15425,4 +15425,37 @@ URLStateMachine.prototype["parse path"] = function parsePath(c) {
     if (this.url.scheme === "file" && (c === undefined || c === 63 || c === 35)) {
       while (this.url.path.length > 1 && this.url.path[0] === "") {
         this.parseError = true;
-        t
+        this.url.path.shift();
+      }
+    }
+    if (c === 63) {
+      this.url.query = "";
+      this.state = "query";
+    }
+    if (c === 35) {
+      this.url.fragment = "";
+      this.state = "fragment";
+    }
+  } else {
+    // TODO: If c is not a URL code point and not "%", parse error.
+
+    if (c === 37 &&
+      (!isASCIIHex(this.input[this.pointer + 1]) ||
+        !isASCIIHex(this.input[this.pointer + 2]))) {
+      this.parseError = true;
+    }
+
+    this.buffer += percentEncodeChar(c, isPathPercentEncode);
+  }
+
+  return true;
+};
+
+URLStateMachine.prototype["parse cannot-be-a-base-URL path"] = function parseCannotBeABaseURLPath(c) {
+  if (c === 63) {
+    this.url.query = "";
+    this.state = "query";
+  } else if (c === 35) {
+    this.url.fragment = "";
+    this.state = "fragment";
+  

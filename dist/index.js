@@ -15507,4 +15507,34 @@ URLStateMachine.prototype["parse query"] = function parseQuery(c, cStr) {
       this.parseError = true;
     }
 
-    this.
+    this.buffer += cStr;
+  }
+
+  return true;
+};
+
+URLStateMachine.prototype["parse fragment"] = function parseFragment(c) {
+  if (isNaN(c)) { // do nothing
+  } else if (c === 0x0) {
+    this.parseError = true;
+  } else {
+    // TODO: If c is not a URL code point and not "%", parse error.
+    if (c === 37 &&
+      (!isASCIIHex(this.input[this.pointer + 1]) ||
+        !isASCIIHex(this.input[this.pointer + 2]))) {
+      this.parseError = true;
+    }
+
+    this.url.fragment += percentEncodeChar(c, isC0ControlPercentEncode);
+  }
+
+  return true;
+};
+
+function serializeURL(url, excludeFragment) {
+  let output = url.scheme + ":";
+  if (url.host !== null) {
+    output += "//";
+
+    if (url.username !== "" || url.password !== "") {
+      output +

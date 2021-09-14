@@ -15405,4 +15405,24 @@ URLStateMachine.prototype["parse path"] = function parsePath(c) {
 
     if (isDoubleDot(this.buffer)) {
       shortenPath(this.url);
-      if (c !== 47 && !(isSpecial(this.url) && c === 92)) 
+      if (c !== 47 && !(isSpecial(this.url) && c === 92)) {
+        this.url.path.push("");
+      }
+    } else if (isSingleDot(this.buffer) && c !== 47 &&
+               !(isSpecial(this.url) && c === 92)) {
+      this.url.path.push("");
+    } else if (!isSingleDot(this.buffer)) {
+      if (this.url.scheme === "file" && this.url.path.length === 0 && isWindowsDriveLetterString(this.buffer)) {
+        if (this.url.host !== "" && this.url.host !== null) {
+          this.parseError = true;
+          this.url.host = "";
+        }
+        this.buffer = this.buffer[0] + ":";
+      }
+      this.url.path.push(this.buffer);
+    }
+    this.buffer = "";
+    if (this.url.scheme === "file" && (c === undefined || c === 63 || c === 35)) {
+      while (this.url.path.length > 1 && this.url.path[0] === "") {
+        this.parseError = true;
+        t

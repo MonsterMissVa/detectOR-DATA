@@ -15577,4 +15577,35 @@ function serializeOrigin(tuple) {
   result += serializeHost(tuple.host);
 
   if (tuple.port !== null) {
-    result += "
+    result += ":" + tuple.port;
+  }
+
+  return result;
+}
+
+module.exports.serializeURL = serializeURL;
+
+module.exports.serializeURLOrigin = function (url) {
+  // https://url.spec.whatwg.org/#concept-url-origin
+  switch (url.scheme) {
+    case "blob":
+      try {
+        return module.exports.serializeURLOrigin(module.exports.parseURL(url.path[0]));
+      } catch (e) {
+        // serializing an opaque origin returns "null"
+        return "null";
+      }
+    case "ftp":
+    case "gopher":
+    case "http":
+    case "https":
+    case "ws":
+    case "wss":
+      return serializeOrigin({
+        scheme: url.scheme,
+        host: url.host,
+        port: url.port
+      });
+    case "file":
+      // spec says "exercise to the reader", chrome says "file://"
+  

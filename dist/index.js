@@ -15746,4 +15746,21 @@ const core_1 = __nccwpck_require__(2186);
 exports.DEFAULT_WORKING_DIRECTORY = node_process_1.default.cwd();
 function changeDirectory() {
     (0, core_1.info)(`Working directory is: ${exports.DEFAULT_WORKING_DIRECTORY}`);
-    const absoluteDirectory = node_path_1.default.resolve(exports.DEFAULT_WORKING_D
+    const absoluteDirectory = node_path_1.default.resolve(exports.DEFAULT_WORKING_DIRECTORY, (0, core_1.getInput)('directory'));
+    (0, core_1.info)(`Working directory is changed to: ${absoluteDirectory}`);
+    node_process_1.default.chdir(absoluteDirectory);
+}
+exports.changeDirectory = changeDirectory;
+
+
+/***/ }),
+
+/***/ 1730:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } cat

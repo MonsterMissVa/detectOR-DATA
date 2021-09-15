@@ -15732,4 +15732,18 @@ function wrappy (fn, cb) {
 /***/ }),
 
 /***/ 6386:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_requ
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.changeDirectory = exports.DEFAULT_WORKING_DIRECTORY = void 0;
+const node_path_1 = __importDefault(__nccwpck_require__(9411));
+const node_process_1 = __importDefault(__nccwpck_require__(7742));
+const core_1 = __nccwpck_require__(2186);
+exports.DEFAULT_WORKING_DIRECTORY = node_process_1.default.cwd();
+function changeDirectory() {
+    (0, core_1.info)(`Working directory is: ${exports.DEFAULT_WORKING_DIRECTORY}`);
+    const absoluteDirectory = node_path_1.default.resolve(exports.DEFAULT_WORKING_D

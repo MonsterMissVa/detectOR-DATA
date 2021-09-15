@@ -15779,4 +15779,18 @@ const changeDirectory_1 = __nccwpck_require__(6386);
 function handleCommit(eventName, results, ruleMetaDatas) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const failCheck = (0,
+        const failCheck = (0, core_1.getBooleanInput)('fail-check');
+        (0, core_1.startGroup)(`GitHub ${eventName}`);
+        let warningCounter = 0;
+        let errorCounter = 0;
+        for (const result of results) {
+            const relativePath = node_path_1.default.relative(changeDirectory_1.DEFAULT_WORKING_DIRECTORY, result.filePath);
+            for (const message of result.messages) {
+                if (message.ruleId === null || result.source === undefined) {
+                    continue;
+                }
+                const rule = ruleMetaDatas[message.ruleId];
+                (0, core_1.info)(`  ${relativePath}:${message.line}`);
+                switch (message.severity) {
+                    case 0:
+                        (0, core_1.notice)(`[${message.ruleId}]${message.message}: (${(_a = rule === null 

@@ -15828,4 +15828,22 @@ function handleCommit(eventName, results, ruleMetaDatas) {
         else {
             (0, core_1.notice)('ESLint passes');
         }
-        (0, core_1.endGr
+        (0, core_1.endGroup)();
+    });
+}
+exports.handleCommit = handleCommit;
+
+
+/***/ }),
+
+/***/ 5173:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisAr

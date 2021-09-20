@@ -15909,4 +15909,31 @@ function getESLintOutput(eslintBinPath) {
             'json',
         ]);
         // eslintOutput.exitCode !== ExitCode.Success when there is any ESLint warning or error.
-        // Swallow this kind of error and parse the JSON that represents the warnings and er
+        // Swallow this kind of error and parse the JSON that represents the warnings and errors.
+        const results = JSON.parse(eslintOutput.stdout);
+        return results;
+    });
+}
+exports.getESLintOutput = getESLintOutput;
+
+
+/***/ }),
+
+/***/ 7738:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getIndexedModifiedLines = void 0;
+const core_1 = __nccwpck_require__(2186);
+const HUNK_HEADER_PATTERN = /^@@ -\d+(,\d+)? \+(\d+)(,(\d+))? @@/;
+function getIndexedModifiedLines(file) {
+    var _a;
+    const modifiedLines = [];
+    const indexedModifiedLines = {};
+    let currentLine = 0;
+    let remainingLinesInHunk = 0;
+    const lines = (_a = file.patch) === null || _a === void 0 ? void 0 : _a.split('\n');
+    if (lines) {
+        for (const line of lines) {
+            if (remaining

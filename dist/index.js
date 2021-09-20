@@ -15979,4 +15979,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOctokit = void 0;
 const core_1 = __nccwpck_require__(2186);
 const utils_1 = __nccwpck_require__(3030);
-const plugin_retry_1 = __nccwpck_re
+const plugin_retry_1 = __nccwpck_require__(6298);
+const plugin_throttling_1 = __nccwpck_require__(9968);
+function getOctokit() {
+    const githubToken = (0, core_1.getInput)('github-token');
+    const Octokit = utils_1.GitHub.plugin(plugin_throttling_1.throttling, plugin_retry_1.retry);
+    const octokit = new Octokit((0, utils_1.getOctokitOptions)(githubToken, {
+        throttle: {
+            onRateLimit: (retryAfter, options) => {
+                if (options.request.retryCount === 0) {
+                    octokit.log.warn(`Request quota exhausted for request ${options.method} ${options.url}`);
+                    octokit.log.info(`Retrying after ${retryAfter} seconds!`);
+                    return true;
+                }
+                else {
+                    octokit.log.error(`Request quota exhausted for request ${options.metho

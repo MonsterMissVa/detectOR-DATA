@@ -15952,4 +15952,31 @@ function getIndexedModifiedLines(file) {
                     modifiedLines.push(currentLine);
                     indexedModifiedLines[currentLine] = true;
                 }
-                current
+                currentLine++;
+                remainingLinesInHunk--;
+            }
+        }
+    }
+    (0, core_1.info)(`  File modified lines: ${modifiedLines.join()}`);
+    if (file.patch !== undefined) {
+        (0, core_1.info)(`  File patch: \n${file.patch
+            .split('\n')
+            .map((line) => '    ' + line)
+            .join('\n')}\n`);
+    }
+    return indexedModifiedLines;
+}
+exports.getIndexedModifiedLines = getIndexedModifiedLines;
+
+
+/***/ }),
+
+/***/ 8442:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getOctokit = void 0;
+const core_1 = __nccwpck_require__(2186);
+const utils_1 = __nccwpck_require__(3030);
+const plugin_retry_1 = __nccwpck_re

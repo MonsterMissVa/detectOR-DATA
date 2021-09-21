@@ -16047,4 +16047,28 @@ function getPullRequestMetadata() {
         (0, core_1.info)(`Owner: ${owner}`);
         (0, core_1.info)(`Repo: ${repo}`);
         (0, core_1.info)(`Pull Request number: ${pullRequestNumber}`);
-        (0, core_1.info)(`Base SHA: ${baseSha}`
+        (0, core_1.info)(`Base SHA: ${baseSha}`);
+        (0, core_1.info)(`Head SHA: ${headSha}`);
+        return {
+            owner,
+            repo,
+            pullRequestNumber,
+            baseSha,
+            headSha,
+        };
+    });
+}
+exports.getPullRequestMetadata = getPullRequestMetadata;
+function getPullRequestMetadataByNumber(pullRequestNumber) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const octokit = (0, getOctokit_1.getOctokit)();
+        const owner = github_1.context.repo.owner;
+        const repo = github_1.context.repo.repo;
+        const response = yield octokit.rest.pulls.get({
+            owner,
+            repo,
+            pull_number: pullRequestNumber,
+        });
+        const pullRequest = response.data;
+        const baseSha = pullRequest.base.sha;
+        const headSha = pullRe

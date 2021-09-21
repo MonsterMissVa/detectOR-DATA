@@ -16032,4 +16032,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestMetadataByNumber = exports.getPullRequestMetadata =
+exports.getPullRequestMetadataByNumber = exports.getPullRequestMetadata = void 0;
+const core_1 = __nccwpck_require__(2186);
+const github_1 = __nccwpck_require__(5438);
+const getOctokit_1 = __nccwpck_require__(8442);
+function getPullRequestMetadata() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const pullRequest = github_1.context.payload.pull_request;
+        const owner = github_1.context.repo.owner;
+        const repo = github_1.context.repo.repo;
+        const pullRequestNumber = pullRequest.number;
+        const baseSha = pullRequest.base.sha;
+        const headSha = pullRequest.head.sha;
+        (0, core_1.info)(`Owner: ${owner}`);
+        (0, core_1.info)(`Repo: ${repo}`);
+        (0, core_1.info)(`Pull Request number: ${pullRequestNumber}`);
+        (0, core_1.info)(`Base SHA: ${baseSha}`

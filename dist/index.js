@@ -15993,4 +15993,33 @@ function getOctokit() {
                     return true;
                 }
                 else {
-                    octokit.log.error(`Request quota exhausted for request ${options.metho
+                    octokit.log.error(`Request quota exhausted for request ${options.method} ${options.url}`);
+                }
+            },
+            onSecondaryRateLimit: (retryAfter, options) => {
+                if (options.request.retryCount === 0) {
+                    octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`);
+                    octokit.log.info(`Retrying after ${retryAfter} seconds!`);
+                    return true;
+                }
+                else {
+                    octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`);
+                }
+            },
+        },
+        retry: {
+            doNotRetry: ['429'],
+        },
+    }));
+    return octokit;
+}
+exports.getOctokit = getOctokit;
+
+
+/***/ }),
+
+/***/ 6941:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __awaiter = (this && thi

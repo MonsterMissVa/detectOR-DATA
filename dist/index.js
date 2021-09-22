@@ -16071,4 +16071,29 @@ function getPullRequestMetadataByNumber(pullRequestNumber) {
         });
         const pullRequest = response.data;
         const baseSha = pullRequest.base.sha;
-        const headSha = pullRe
+        const headSha = pullRequest.head.sha;
+        (0, core_1.info)(`Owner: ${owner}`);
+        (0, core_1.info)(`Repo: ${repo}`);
+        (0, core_1.info)(`Pull Request number: ${pullRequestNumber}`);
+        (0, core_1.info)(`Base SHA: ${baseSha}`);
+        (0, core_1.info)(`Head SHA: ${headSha}`);
+        return {
+            owner,
+            repo,
+            pullRequestNumber,
+            baseSha,
+            headSha,
+        };
+    });
+}
+exports.getPullRequestMetadataByNumber = getPullRequestMetadataByNumber;
+
+
+/***/ }),
+
+/***/ 7801:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(

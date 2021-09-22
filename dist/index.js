@@ -16111,4 +16111,31 @@ const github_1 = __nccwpck_require__(5438);
 function getPushMetadata() {
     return __awaiter(this, void 0, void 0, function* () {
         const push = github_1.context.payload;
-       
+        const owner = github_1.context.repo.owner;
+        const repo = github_1.context.repo.repo;
+        const beforeSha = push.before;
+        const afterSha = push.after;
+        (0, core_1.info)(`Owner: ${owner}`);
+        (0, core_1.info)(`Repo: ${repo}`);
+        (0, core_1.info)(`Before SHA: ${beforeSha}`);
+        (0, core_1.info)(`After SHA: ${afterSha}`);
+        return {
+            owner,
+            repo,
+            beforeSha,
+            afterSha,
+        };
+    });
+}
+exports.getPushMetadata = getPushMetadata;
+
+
+/***/ }),
+
+/***/ 6144:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = P

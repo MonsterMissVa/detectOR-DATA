@@ -16168,4 +16168,18 @@ function run() {
         const { eslint, eslintBinPath } = yield (0, getESLint_1.getESLint)();
         const results = yield (0, getESLintOutput_1.getESLintOutput)(eslintBinPath);
         const indexedResults = {};
-        for (const file of res
+        for (const file of results) {
+            const relativePath = node_path_1.default.relative(changeDirectory_1.DEFAULT_WORKING_DIRECTORY, file.filePath);
+            (0, core_1.info)(`File name: ${relativePath}`);
+            indexedResults[relativePath] = file;
+            for (const message of file.messages) {
+                (0, core_1.info)(`  [${message.severity}] ${message.message} @ ${message.line}`);
+                if (message.suggestions) {
+                    (0, core_1.info)(`  Suggestions (${message.suggestions.length}):`);
+                    for (const suggestion of message.suggestions) {
+                        (0, core_1.info)(`    ${suggestion.desc} (${suggestion.messageId})`);
+                    }
+                }
+            }
+        }
+        const ruleMetaDatas = eslint.getRulesMetaFo

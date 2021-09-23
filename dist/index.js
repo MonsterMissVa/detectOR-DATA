@@ -16152,4 +16152,20 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const node_path_1 = __importDefault(__nccwpck_require__(9411));
 const core_1 = __nccwpck_require__(2186);
-const github_1 = __nccwpck_require__(5438
+const github_1 = __nccwpck_require__(5438);
+const changeDirectory_1 = __nccwpck_require__(6386);
+const commit_1 = __nccwpck_require__(1730);
+const getESLint_1 = __nccwpck_require__(5173);
+const getESLintOutput_1 = __nccwpck_require__(2580);
+const getPullRequestMetadata_1 = __nccwpck_require__(6941);
+const getPushMetadata_1 = __nccwpck_require__(7801);
+const pullRequest_1 = __nccwpck_require__(3894);
+const push_1 = __nccwpck_require__(4755);
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        (0, core_1.startGroup)('ESLint');
+        (0, changeDirectory_1.changeDirectory)();
+        const { eslint, eslintBinPath } = yield (0, getESLint_1.getESLint)();
+        const results = yield (0, getESLintOutput_1.getESLintOutput)(eslintBinPath);
+        const indexedResults = {};
+        for (const file of res

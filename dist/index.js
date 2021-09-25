@@ -16182,4 +16182,16 @@ function run() {
                 }
             }
         }
-        const ruleMetaDatas = eslint.getRulesMetaFo
+        const ruleMetaDatas = eslint.getRulesMetaForResults(results);
+        (0, core_1.endGroup)();
+        (0, core_1.info)(`Event name: ${github_1.context.eventName}`);
+        switch (github_1.context.eventName) {
+            case 'pull_request':
+                yield (() => __awaiter(this, void 0, void 0, function* () {
+                    const { owner, repo, pullRequestNumber, baseSha, headSha } = yield (0, getPullRequestMetadata_1.getPullRequestMetadata)();
+                    yield (0, pullRequest_1.handlePullRequest)(indexedResults, ruleMetaDatas, owner, repo, pullRequestNumber, baseSha, headSha);
+                }))();
+                break;
+            case 'push':
+                yield (() => __awaiter(this, void 0, void 0, function* () {
+                    const { owner, repo, beforeSha, afterSha } = yield

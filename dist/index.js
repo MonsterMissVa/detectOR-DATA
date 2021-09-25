@@ -16218,3 +16218,25 @@ function run() {
                 break;
             default:
                 (0, commit_1.handleCommit)(github_1.context.eventName
+                    .split('_')
+                    .map((word) => { var _a; return ((_a = word[0]) === null || _a === void 0 ? void 0 : _a.toUpperCase()) + word.substring(1); })
+                    .join(' '), results, ruleMetaDatas);
+                break;
+        }
+    });
+}
+exports.run = run;
+run();
+
+
+/***/ }),
+
+/***/ 3894:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value

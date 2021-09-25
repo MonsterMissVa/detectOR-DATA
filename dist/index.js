@@ -16194,4 +16194,14 @@ function run() {
                 break;
             case 'push':
                 yield (() => __awaiter(this, void 0, void 0, function* () {
-                    const { owner, repo, beforeSha, afterSha } = yield
+                    const { owner, repo, beforeSha, afterSha } = yield (0, getPushMetadata_1.getPushMetadata)();
+                    yield (0, push_1.handlePush)(indexedResults, ruleMetaDatas, owner, repo, beforeSha, afterSha);
+                }))();
+                break;
+            case 'workflow_run':
+                yield (() => __awaiter(this, void 0, void 0, function* () {
+                    const workflowRun = github_1.context.payload;
+                    if (workflowRun.workflow_run.pull_requests.length > 0) {
+                        for (const pullRequest of workflowRun.workflow_run.pull_requests) {
+                            const { owner, repo, pullRequestNumber, baseSha, headSha } = yield (0, getPullRequestMetadata_1.getPullRequestMetadataByNumber)(pullRequest.number);
+                            yield (0, pullRequest_1.handlePullRequest)(in

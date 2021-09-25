@@ -16204,4 +16204,17 @@ function run() {
                     if (workflowRun.workflow_run.pull_requests.length > 0) {
                         for (const pullRequest of workflowRun.workflow_run.pull_requests) {
                             const { owner, repo, pullRequestNumber, baseSha, headSha } = yield (0, getPullRequestMetadata_1.getPullRequestMetadataByNumber)(pullRequest.number);
-                            yield (0, pullRequest_1.handlePullRequest)(in
+                            yield (0, pullRequest_1.handlePullRequest)(indexedResults, ruleMetaDatas, owner, repo, pullRequestNumber, baseSha, headSha);
+                        }
+                    }
+                    else {
+                        const workflowSourceEventName = workflowRun.workflow_run.event
+                            .split('_')
+                            .map((word) => { var _a; return ((_a = word[0]) === null || _a === void 0 ? void 0 : _a.toUpperCase()) + word.substring(1); })
+                            .join(' ');
+                        yield (0, commit_1.handleCommit)(`Workflow (${workflowSourceEventName})`, results, ruleMetaDatas);
+                    }
+                }))();
+                break;
+            default:
+                (0, commit_1.handleCommit)(github_1.context.eventName

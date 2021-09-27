@@ -16283,4 +16283,22 @@ function getReviewComments(owner, repo, pullRequestNumber, octokit) {
         return relevantReviewComments;
     });
 }
-expo
+exports.getReviewComments = getReviewComments;
+function getReviewThreads(owner, repo, pullRequestNumber, octokit) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    return __awaiter(this, void 0, void 0, function* () {
+        const commentNodeIdToReviewThreadMapping = {};
+        const queryData = yield octokit.graphql(`
+      query ($owner: String!, $repo: String!, $pullRequestNumber: Int!) {
+        repository(owner: $owner, name: $repo) {
+          pullRequest(number: $pullRequestNumber) {
+            reviewThreads(last: 100) {
+              totalCount
+              nodes {
+                id
+                isResolved
+                comments(last: 100) {
+                  totalCount
+                  nodes {
+                    id
+           

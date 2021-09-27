@@ -16317,4 +16317,12 @@ function getReviewThreads(owner, repo, pullRequestNumber, octokit) {
         if (reviewThreadTotalCount !== undefined && reviewThreadTotalCount > 100) {
             (0, core_1.error)(`There are more than 100 review threads: ${reviewThreadTotalCount}`);
         }
-        const reviewThreads = (_f = (_e = (_d = queryData === null || queryData === void 0 ? void 0 : queryData.repository) === nul
+        const reviewThreads = (_f = (_e = (_d = queryData === null || queryData === void 0 ? void 0 : queryData.repository) === null || _d === void 0 ? void 0 : _d.pullRequest) === null || _e === void 0 ? void 0 : _e.reviewThreads) === null || _f === void 0 ? void 0 : _f.nodes;
+        if (reviewThreads !== undefined && reviewThreads !== null) {
+            for (const reviewThread of reviewThreads) {
+                if (reviewThread === null) {
+                    continue;
+                }
+                const commentTotalCount = (_g = reviewThread === null || reviewThread === void 0 ? void 0 : reviewThread.comments) === null || _g === void 0 ? void 0 : _g.totalCount;
+                if (commentTotalCount !== undefined && commentTotalCount > 100) {
+                    (0, core_1.error)(`There are more than 100 review comments in review thread ${reviewThread === null || reviewThread === void 0 ? void 0 : reviewThread.id}: ${com

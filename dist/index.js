@@ -16271,4 +16271,16 @@ function getReviewComments(owner, repo, pullRequestNumber, octokit) {
         });
         const reviewComments = yield octokit.rest.pulls.listReviewComments({
             owner,
-            
+            repo,
+            pull_number: pullRequestNumber,
+        });
+        const relevantReviews = reviews.data.filter((review) => { var _a; return ((_a = review.user) === null || _a === void 0 ? void 0 : _a.id) === 41898282 && review.body === REVIEW_BODY; });
+        const relevantReviewIds = relevantReviews.map((review) => review.id);
+        const relevantReviewComments = reviewComments.data.filter((reviewComment) => reviewComment.user.id === 41898282 &&
+            reviewComment.pull_request_review_id !== null &&
+            relevantReviewIds.includes(reviewComment.pull_request_review_id));
+        (0, core_1.info)(`Existing review comments: (${relevantReviewComments.length})`);
+        return relevantReviewComments;
+    });
+}
+expo

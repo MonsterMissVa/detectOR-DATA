@@ -16359,4 +16359,20 @@ function getCommentFromFix(source, line, fix) {
     (0, core_1.info)('    Fix:\n' +
         '      ' +
         `@@ -${line},${impactedOriginalLines} +${impactedReplaceLines} @@\n` +
-      
+        `${originalLines.map((line) => '      - ' + line).join('\n')}\n` +
+        `${replacedLines.map((line) => '      + ' + line).join('\n')}`);
+    const reviewSuggestion = {
+        start_side: impactedOriginalLines === 1 ? undefined : 'RIGHT',
+        start_line: impactedOriginalLines === 1 ? undefined : line,
+        side: 'RIGHT',
+        line: line + impactedOriginalLines - 1,
+        body: '```suggestion\n' + `${replacedLines.join('\n')}\n` + '```\n',
+    };
+    return reviewSuggestion;
+}
+exports.getCommentFromFix = getCommentFromFix;
+function matchReviewComments(reviewComments, reviewComment) {
+    const matchedNodeIds = [];
+    for (const existingReviewComment of reviewComments) {
+        if (existingReviewComment.path === reviewComment.path &&
+        

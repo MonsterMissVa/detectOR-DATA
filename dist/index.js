@@ -16340,4 +16340,23 @@ function getReviewThreads(owner, repo, pullRequestNumber, octokit) {
             }
         }
         return commentNodeIdToReviewThreadMapping;
-    
+    });
+}
+exports.getReviewThreads = getReviewThreads;
+function getCommentFromFix(source, line, fix) {
+    const textRange = source.substring(fix.range[0], fix.range[1]);
+    const impactedOriginalLines = textRange.split('\n').length;
+    const originalLines = source
+        .split('\n')
+        .slice(line - 1, line - 1 + impactedOriginalLines);
+    const replacedSource = source.substring(0, fix.range[0]) +
+        fix.text +
+        source.substring(fix.range[1]);
+    const impactedReplaceLines = fix.text.split('\n').length;
+    const replacedLines = replacedSource
+        .split('\n')
+        .slice(line - 1, line - 1 + impactedReplaceLines);
+    (0, core_1.info)('    Fix:\n' +
+        '      ' +
+        `@@ -${line},${impactedOriginalLines} +${impactedReplaceLines} @@\n` +
+      

@@ -16250,4 +16250,25 @@ const core_1 = __nccwpck_require__(2186);
 const getIndexedModifiedLines_1 = __nccwpck_require__(7738);
 const getOctokit_1 = __nccwpck_require__(8442);
 const REVIEW_BODY = "ESLint doesn't pass. Please fix all ESLint issues.";
-function getPullRequestFiles(owner, repo, pullRequestNu
+function getPullRequestFiles(owner, repo, pullRequestNumber, octokit) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield octokit.rest.pulls.listFiles({
+            owner,
+            repo,
+            pull_number: pullRequestNumber,
+        });
+        (0, core_1.info)(`Files: (${response.data.length})`);
+        return response.data;
+    });
+}
+exports.getPullRequestFiles = getPullRequestFiles;
+function getReviewComments(owner, repo, pullRequestNumber, octokit) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const reviews = yield octokit.rest.pulls.listReviews({
+            owner,
+            repo,
+            pull_number: pullRequestNumber,
+        });
+        const reviewComments = yield octokit.rest.pulls.listReviewComments({
+            owner,
+            

@@ -16301,4 +16301,20 @@ function getReviewThreads(owner, repo, pullRequestNumber, octokit) {
                   totalCount
                   nodes {
                     id
-           
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `, {
+            owner,
+            repo,
+            pullRequestNumber,
+        });
+        const reviewThreadTotalCount = (_c = (_b = (_a = queryData === null || queryData === void 0 ? void 0 : queryData.repository) === null || _a === void 0 ? void 0 : _a.pullRequest) === null || _b === void 0 ? void 0 : _b.reviewThreads) === null || _c === void 0 ? void 0 : _c.totalCount;
+        if (reviewThreadTotalCount !== undefined && reviewThreadTotalCount > 100) {
+            (0, core_1.error)(`There are more than 100 review threads: ${reviewThreadTotalCount}`);
+        }
+        const reviewThreads = (_f = (_e = (_d = queryData === null || queryData === void 0 ? void 0 : queryData.repository) === nul

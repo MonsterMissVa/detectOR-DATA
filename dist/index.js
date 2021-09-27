@@ -16325,4 +16325,19 @@ function getReviewThreads(owner, repo, pullRequestNumber, octokit) {
                 }
                 const commentTotalCount = (_g = reviewThread === null || reviewThread === void 0 ? void 0 : reviewThread.comments) === null || _g === void 0 ? void 0 : _g.totalCount;
                 if (commentTotalCount !== undefined && commentTotalCount > 100) {
-                    (0, core_1.error)(`There are more than 100 review comments in review thread ${reviewThread === null || reviewThread === void 0 ? void 0 : reviewThread.id}: ${com
+                    (0, core_1.error)(`There are more than 100 review comments in review thread ${reviewThread === null || reviewThread === void 0 ? void 0 : reviewThread.id}: ${commentTotalCount}`);
+                }
+                const comments = (_h = reviewThread === null || reviewThread === void 0 ? void 0 : reviewThread.comments) === null || _h === void 0 ? void 0 : _h.nodes;
+                if (comments !== undefined && comments !== null) {
+                    for (const comment of comments) {
+                        const commentId = comment === null || comment === void 0 ? void 0 : comment.id;
+                        if (commentId === undefined) {
+                            continue;
+                        }
+                        commentNodeIdToReviewThreadMapping[commentId] = reviewThread;
+                    }
+                }
+            }
+        }
+        return commentNodeIdToReviewThreadMapping;
+    

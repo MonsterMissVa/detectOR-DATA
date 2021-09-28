@@ -16416,4 +16416,13 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
                     if (indexedModifiedLines[message.line]) {
                         (0, core_1.info)(`  Matched line: ${message.line}`);
                         if (message.fix) {
-                            const reviewSuggestion = getCommentFromFix(result.source,
+                            const reviewSuggestion = getCommentFromFix(result.source, message.line, message.fix);
+                            const reviewComment = Object.assign(Object.assign({}, reviewSuggestion), { body: `**${message.message}** [${message.ruleId}](${(_a = rule === null || rule === void 0 ? void 0 : rule.docs) === null || _a === void 0 ? void 0 : _a.url})\n\nFix available:\n\n` +
+                                    reviewSuggestion.body, path: file.filename });
+                            const matchedComments = matchReviewComments(existingReviewComments, reviewComment);
+                            commentsCounter++;
+                            if (matchedComments.length === 0) {
+                                reviewComments.push(reviewComment);
+                                (0, core_1.info)(`    Comment queued`);
+                            }
+                     

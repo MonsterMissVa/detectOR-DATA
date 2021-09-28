@@ -16389,4 +16389,16 @@ exports.matchReviewComments = matchReviewComments;
 function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullRequestNumber, baseSha, headSha) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const failCheck = (0, core_1.getBooleanInpu
+        const failCheck = (0, core_1.getBooleanInput)('fail-check');
+        const requestChanges = (0, core_1.getBooleanInput)('request-changes');
+        (0, core_1.startGroup)('GitHub Pull Request');
+        const octokit = (0, getOctokit_1.getOctokit)();
+        const files = yield getPullRequestFiles(owner, repo, pullRequestNumber, octokit);
+        const existingReviewComments = yield getReviewComments(owner, repo, pullRequestNumber, octokit);
+        const commentNodeIdToReviewThreadMapping = yield getReviewThreads(owner, repo, pullRequestNumber, octokit);
+        let commentsCounter = 0;
+        const reviewComments = [];
+        let matchedReviewCommentNodeIds = {};
+        for (const file of files) {
+            (0, core_1.info)(`  File name: ${file.filename}`);
+            (0, core_1.info)(`  File status: ${file.status}`)

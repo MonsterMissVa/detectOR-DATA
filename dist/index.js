@@ -16425,4 +16425,14 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
                                 reviewComments.push(reviewComment);
                                 (0, core_1.info)(`    Comment queued`);
                             }
-                     
+                            else {
+                                matchedReviewCommentNodeIds = Object.assign(Object.assign({}, matchedReviewCommentNodeIds), Object.fromEntries(matchedComments.map((nodeId) => [nodeId, true])));
+                                (0, core_1.info)(`    Comment skipped`);
+                            }
+                        }
+                        else if (message.suggestions) {
+                            let reviewSuggestions = undefined;
+                            for (const suggestion of message.suggestions) {
+                                const reviewSuggestion = getCommentFromFix(result.source, message.line, suggestion.fix);
+                                if (reviewSuggestions === undefined) {
+                                    reviewSuggestions = Object.assign({}, reviewSuggesti

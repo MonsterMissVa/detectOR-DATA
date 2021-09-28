@@ -16401,4 +16401,19 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
         let matchedReviewCommentNodeIds = {};
         for (const file of files) {
             (0, core_1.info)(`  File name: ${file.filename}`);
-            (0, core_1.info)(`  File status: ${file.status}`)
+            (0, core_1.info)(`  File status: ${file.status}`);
+            if (file.status === 'removed') {
+                continue;
+            }
+            const indexedModifiedLines = (0, getIndexedModifiedLines_1.getIndexedModifiedLines)(file);
+            const result = indexedResults[file.filename];
+            if (result) {
+                for (const message of result.messages) {
+                    if (message.ruleId === null || result.source === undefined) {
+                        continue;
+                    }
+                    const rule = ruleMetaDatas[message.ruleId];
+                    if (indexedModifiedLines[message.line]) {
+                        (0, core_1.info)(`  Matched line: ${message.line}`);
+                        if (message.fix) {
+                            const reviewSuggestion = getCommentFromFix(result.source,

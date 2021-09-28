@@ -16435,4 +16435,15 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
                             for (const suggestion of message.suggestions) {
                                 const reviewSuggestion = getCommentFromFix(result.source, message.line, suggestion.fix);
                                 if (reviewSuggestions === undefined) {
-                                    reviewSuggestions = Object.assign({}, reviewSuggesti
+                                    reviewSuggestions = Object.assign({}, reviewSuggestion);
+                                }
+                                else {
+                                    if (reviewSuggestion.start_line !==
+                                        reviewSuggestions.start_line ||
+                                        reviewSuggestion.line !== reviewSuggestions.line) {
+                                        (0, core_1.error)(`    Suggestions have mismatched line(s): ${reviewSuggestions.start_line === undefined
+                                            ? ''
+                                            : reviewSuggestions.start_line + ':'}${reviewSuggestions.line} and ${reviewSuggestion.start_line === undefined
+                                            ? ''
+                                            : reviewSuggestion.start_line + ':'}${reviewSuggestion.line}`);
+            

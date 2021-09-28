@@ -16375,4 +16375,18 @@ function matchReviewComments(reviewComments, reviewComment) {
     const matchedNodeIds = [];
     for (const existingReviewComment of reviewComments) {
         if (existingReviewComment.path === reviewComment.path &&
-        
+            existingReviewComment.line === reviewComment.line &&
+            existingReviewComment.side === reviewComment.side &&
+            existingReviewComment.start_line == reviewComment.start_line && // null-undefined comparison
+            existingReviewComment.start_side == reviewComment.start_side && // null-undefined comparison
+            existingReviewComment.body === reviewComment.body) {
+            matchedNodeIds.push(existingReviewComment.node_id);
+        }
+    }
+    return matchedNodeIds;
+}
+exports.matchReviewComments = matchReviewComments;
+function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullRequestNumber, baseSha, headSha) {
+    var _a, _b, _c;
+    return __awaiter(this, void 0, void 0, function* () {
+        const failCheck = (0, core_1.getBooleanInpu

@@ -16446,4 +16446,12 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
                                             : reviewSuggestions.start_line + ':'}${reviewSuggestions.line} and ${reviewSuggestion.start_line === undefined
                                             ? ''
                                             : reviewSuggestion.start_line + ':'}${reviewSuggestion.line}`);
-            
+                                    }
+                                    reviewSuggestions.body += '\n' + reviewSuggestion.body;
+                                }
+                            }
+                            if (reviewSuggestions !== undefined) {
+                                const reviewComment = Object.assign(Object.assign({}, reviewSuggestions), { body: `**${message.message}** [${message.ruleId}](${(_b = rule === null || rule === void 0 ? void 0 : rule.docs) === null || _b === void 0 ? void 0 : _b.url})\n\nSuggestion(s) available:\n\n` +
+                                        reviewSuggestions.body, path: file.filename });
+                                const matchedComments = matchReviewComments(existingReviewComments, reviewComment);
+                                commentsCounter++;

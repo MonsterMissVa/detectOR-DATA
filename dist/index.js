@@ -16479,4 +16479,18 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
                                 (0, core_1.info)(`    Comment queued`);
                             }
                             else {
-                       
+                                matchedReviewCommentNodeIds = Object.assign(Object.assign({}, matchedReviewCommentNodeIds), Object.fromEntries(matchedComments.map((nodeId) => [nodeId, true])));
+                                (0, core_1.info)(`    Comment skipped`);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        (0, core_1.endGroup)();
+        (0, core_1.startGroup)('Feedback');
+        for (const reviewComment of existingReviewComments) {
+            const reviewThread = commentNodeIdToReviewThreadMapping[reviewComment.node_id];
+            if (reviewThread !== undefined) {
+                if (matchedReviewCommentNodeIds[reviewComment.node_id] &&
+                    reviewThread.isResol

@@ -16467,4 +16467,16 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
                         }
                         else {
                             const reviewComment = {
-                                body: `**${message.mes
+                                body: `**${message.message}** [${message.ruleId}](${(_c = rule === null || rule === void 0 ? void 0 : rule.docs) === null || _c === void 0 ? void 0 : _c.url})`,
+                                path: file.filename,
+                                side: 'RIGHT',
+                                line: message.line,
+                            };
+                            const matchedComments = matchReviewComments(existingReviewComments, reviewComment);
+                            commentsCounter++;
+                            if (matchedComments.length === 0) {
+                                reviewComments.push(reviewComment);
+                                (0, core_1.info)(`    Comment queued`);
+                            }
+                            else {
+                       

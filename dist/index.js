@@ -16493,4 +16493,24 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
             const reviewThread = commentNodeIdToReviewThreadMapping[reviewComment.node_id];
             if (reviewThread !== undefined) {
                 if (matchedReviewCommentNodeIds[reviewComment.node_id] &&
-                    reviewThread.isResol
+                    reviewThread.isResolved) {
+                    octokit.graphql(`
+            mutation ($nodeId: ID!) {
+              unresolveReviewThread(input: {threadId: $nodeId}) {
+                thread {
+                  id
+                }
+              }
+            }
+          `, {
+                        nodeId: reviewThread.id,
+                    });
+                    (0, core_1.info)(`Review comment unresolved: ${reviewComment.url}`);
+                }
+                else if (!matchedReviewCommentNodeIds[reviewComment.node_id] &&
+                    !reviewThread.isResolved) {
+                    octokit.graphql(`
+            mutation ($nodeId: ID!) {
+              resolveReviewThread(input: {threadId: $nodeId}) {
+                thread {
+           

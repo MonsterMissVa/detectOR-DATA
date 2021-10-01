@@ -16513,4 +16513,26 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
             mutation ($nodeId: ID!) {
               resolveReviewThread(input: {threadId: $nodeId}) {
                 thread {
-           
+                  id
+                }
+              }
+            }
+          `, {
+                        nodeId: reviewThread.id,
+                    });
+                    (0, core_1.info)(`Review comment resolved: ${reviewComment.url}`);
+                }
+                else {
+                    (0, core_1.info)(`Review comment remains ${reviewThread.isResolved ? 'resolved' : 'unresolved'}: ${reviewComment.url}`);
+                }
+            }
+            else {
+                (0, core_1.error)(`Review comment has no associated review thread: ${reviewComment.url}`);
+            }
+        }
+        if (commentsCounter > 0) {
+            const response = yield octokit.rest.pulls.createReview({
+                owner,
+                repo,
+                body: REVIEW_BODY,
+            

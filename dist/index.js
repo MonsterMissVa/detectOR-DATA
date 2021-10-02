@@ -16605,4 +16605,22 @@ function handlePush(indexedResults, ruleMetaDatas, owner, repo, beforeSha, after
         const files = yield getPushFiles(owner, repo, beforeSha, afterSha, octokit);
         if (files === undefined || files.length === 0) {
             (0, core_1.info)(`Push contains no files`);
-      
+            return;
+        }
+        let warningCounter = 0;
+        let errorCounter = 0;
+        for (const file of files) {
+            (0, core_1.info)(`  File name: ${file.filename}`);
+            (0, core_1.info)(`  File status: ${file.status}`);
+            if (file.status === 'removed') {
+                continue;
+            }
+            const indexedModifiedLines = (0, getIndexedModifiedLines_1.getIndexedModifiedLines)(file);
+            const result = indexedResults[file.filename];
+            if (result) {
+                for (const message of result.messages) {
+                    if (message.ruleId === null || result.source === undefined) {
+                        continue;
+                    }
+                    const rule = ruleMetaDatas[message.ruleId];
+             

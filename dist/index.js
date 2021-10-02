@@ -16535,4 +16535,21 @@ function handlePullRequest(indexedResults, ruleMetaDatas, owner, repo, pullReque
                 owner,
                 repo,
                 body: REVIEW_BODY,
-            
+                pull_number: pullRequestNumber,
+                commit_id: headSha,
+                event: requestChanges ? 'REQUEST_CHANGES' : 'COMMENT',
+                comments: reviewComments,
+            });
+            if (response.status !== 200) {
+                throw new Error(`Failed to create review with ${reviewComments.length} comment(s).`);
+            }
+            if (commentsCounter - reviewComments.length > 0) {
+                (0, core_1.info)(`Review comments existed and skipped: ${commentsCounter - reviewComments.length}`);
+            }
+            (0, core_1.info)(`Review comments submitted: ${reviewComments.length}`);
+            if (failCheck) {
+                throw new Error('ESLint fails. Please review comments.');
+            }
+            else {
+                (0, core_1.error)('ESLint fails');
+           

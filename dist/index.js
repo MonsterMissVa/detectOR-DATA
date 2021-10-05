@@ -16683,4 +16683,51 @@ module.exports = eval("require")("encoding");
 /***/ 9491:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(imp
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("assert");
+
+/***/ }),
+
+/***/ 2081:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("child_process");
+
+/***/ }),
+
+/***/ 6113:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("crypto");
+
+/***/ }),
+
+/***/ 2361:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("events");
+
+/***/ }),
+
+/***/ 7147:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("fs");
+
+/***/ }),
+
+/***/ 3685:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("http");
+
+/***/ }),
+
+/***/ 5687:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("https");
+
+/***/ }),
+
+/***/ 8188:
+/***/ 

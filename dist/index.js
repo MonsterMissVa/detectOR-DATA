@@ -16623,4 +16623,14 @@ function handlePush(indexedResults, ruleMetaDatas, owner, repo, beforeSha, after
                         continue;
                     }
                     const rule = ruleMetaDatas[message.ruleId];
-             
+                    if (indexedModifiedLines[message.line]) {
+                        (0, core_1.info)(`  Matched line: ${message.line}`);
+                        switch (message.severity) {
+                            case 0:
+                                (0, core_1.notice)(`[${message.ruleId}]${message.message}: (${(_a = rule === null || rule === void 0 ? void 0 : rule.docs) === null || _a === void 0 ? void 0 : _a.url})`, {
+                                    file: file.filename,
+                                    startLine: message.line,
+                                });
+                                break;
+                            case 1:
+                                (0, core_1.warning)(`[${message.ruleId}]${message.message}: (${(_b = rule === null || rule === 

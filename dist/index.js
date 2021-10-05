@@ -16645,4 +16645,42 @@ function handlePush(indexedResults, ruleMetaDatas, owner, repo, beforeSha, after
                                     startLine: message.line,
                                 });
                                 errorCounter++;
-                                br
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        (0, core_1.endGroup)();
+        (0, core_1.startGroup)('Feedback');
+        if (warningCounter > 0 || errorCounter > 0) {
+            if (failCheck) {
+                throw new Error('ESLint fails. Please review comments.');
+            }
+            else {
+                (0, core_1.error)('ESLint fails');
+            }
+        }
+        else {
+            (0, core_1.notice)('ESLint passes');
+        }
+        (0, core_1.endGroup)();
+    });
+}
+exports.handlePush = handlePush;
+
+
+/***/ }),
+
+/***/ 2877:
+/***/ ((module) => {
+
+module.exports = eval("require")("encoding");
+
+
+/***/ }),
+
+/***/ 9491:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(imp

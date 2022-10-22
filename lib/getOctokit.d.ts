@@ -2,4 +2,6 @@ export declare function getOctokit(): import("@octokit/core").Octokit & import("
     paginate: import("@octokit/plugin-paginate-rest").PaginateInterface;
 } & {
     retry: {
-        retryRequest: (error: import("@octokit/request-error").RequestError, retries: 
+        retryRequest: (error: import("@octokit/request-error").RequestError, retries: number, retryAfter: number) => import("@octokit/request-error").RequestError;
+    };
+};

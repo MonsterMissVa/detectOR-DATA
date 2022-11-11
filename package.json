@@ -26,4 +26,26 @@
   "scripts": {
     "build": "yarn tsc",
     "package": "yarn ncc build src/index.ts --external eslint --source-map --license licenses.txt",
-    "tes
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint -c .eslintrc.json '{src,tests}/**/*'",
+    "preversion": "rm -rf lib && rm -rf dist && yarn && yarn build && yarn package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CatChen/eslint-suggestion-action.git"
+  },
+  "author": "Cat Chen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CatChen/eslint-suggestion-action/issues"
+  },
+  "homepage": "https://github.com/CatChen/eslint-suggestion-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.7.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.0.1",
+    "@octokit/plugin-retry": "^3.0.9",
+    "@octokit/plugin-throttling": "^5.0.1",
+    "glob": "^8.0.3"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "eslint-suggestion-action",
+  "version": "2.1.19",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.js",
+  "type": "mo

@@ -33,4 +33,28 @@ export async function handleCommit(
       if (message.ruleId === null || result.source === undefined) {
         continue;
       }
-      const rule = ruleMetaDatas
+      const rule = ruleMetaDatas[message.ruleId];
+      info(`  ${relativePath}:${message.line}`);
+      switch (message.severity) {
+        case 0:
+          notice(
+            `[${message.ruleId}]${message.message}: (${rule?.docs?.url})`,
+            {
+              file: relativePath,
+              startLine: message.line,
+            },
+          );
+          break;
+        case 1:
+          warning(
+            `[${message.ruleId}]${message.message}: (${rule?.docs?.url})`,
+            {
+              file: relativePath,
+              startLine: message.line,
+            },
+          );
+          warningCounter++;
+          break;
+        case 2:
+          error(`[${message.ruleId}]${message.message}: (${rule?.docs?.url})`, {
+            file: relativ

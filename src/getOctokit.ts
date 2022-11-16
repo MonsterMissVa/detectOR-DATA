@@ -16,3 +16,27 @@ export function getOctokit() {
             url: string;
             request: { retryCount: number };
           },
+        ) => {
+          if (options.request.retryCount === 0) {
+            octokit.log.warn(
+              `Request quota exhausted for request ${options.method} ${options.url}`,
+            );
+            octokit.log.info(`Retrying after ${retryAfter} seconds!`);
+            return true;
+          } else {
+            octokit.log.error(
+              `Request quota exhausted for request ${options.method} ${options.url}`,
+            );
+          }
+        },
+        onSecondaryRateLimit: (
+          retryAfter: number,
+          options: {
+            method: string;
+            url: string;
+            request: { retryCount: number };
+          },
+        ) => {
+          if (options.request.retryCount === 0) {
+            octokit.log.warn(
+              `Abuse detected for reque

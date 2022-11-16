@@ -40,4 +40,12 @@ export function getIndexedModifiedLines(
   info(`  File modified lines: ${modifiedLines.join()}`);
   if (file.patch !== undefined) {
     info(
-      `  File patch: \n${f
+      `  File patch: \n${file.patch
+        .split('\n')
+        .map((line) => '    ' + line)
+        .join('\n')}\n`,
+    );
+  }
+
+  return indexedModifiedLines;
+}

@@ -38,4 +38,20 @@ export async function getPullRequestMetadataByNumber(
     pull_number: pullRequestNumber,
   });
   const pullRequest = response.data;
-  const baseSha = pull
+  const baseSha = pullRequest.base.sha;
+  const headSha = pullRequest.head.sha;
+
+  info(`Owner: ${owner}`);
+  info(`Repo: ${repo}`);
+  info(`Pull Request number: ${pullRequestNumber}`);
+  info(`Base SHA: ${baseSha}`);
+  info(`Head SHA: ${headSha}`);
+
+  return {
+    owner,
+    repo,
+    pullRequestNumber,
+    baseSha,
+    headSha,
+  };
+}

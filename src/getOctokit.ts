@@ -39,4 +39,21 @@ export function getOctokit() {
         ) => {
           if (options.request.retryCount === 0) {
             octokit.log.warn(
-              `Abuse detected for reque
+              `Abuse detected for request ${options.method} ${options.url}`,
+            );
+            octokit.log.info(`Retrying after ${retryAfter} seconds!`);
+            return true;
+          } else {
+            octokit.log.warn(
+              `Abuse detected for request ${options.method} ${options.url}`,
+            );
+          }
+        },
+      },
+      retry: {
+        doNotRetry: ['429'],
+      },
+    }),
+  );
+  return octokit;
+}

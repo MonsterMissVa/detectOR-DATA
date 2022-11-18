@@ -11,4 +11,13 @@ export async function getPushMetadata() {
 
   info(`Owner: ${owner}`);
   info(`Repo: ${repo}`);
-  info(`Before SHA: ${before
+  info(`Before SHA: ${beforeSha}`);
+  info(`After SHA: ${afterSha}`);
+
+  return {
+    owner,
+    repo,
+    beforeSha,
+    afterSha,
+  };
+}

@@ -71,4 +71,38 @@ export async function getReviewComments(
   return relevantReviewComments;
 }
 
-export async function getRevie
+export async function getReviewThreads(
+  owner: string,
+  repo: string,
+  pullRequestNumber: number,
+  octokit: Octokit & Api,
+) {
+  const commentNodeIdToReviewThreadMapping: {
+    [id: string]: PullRequestReviewThread;
+  } = {};
+  const queryData = await octokit.graphql<Query>(
+    `
+      query ($owner: String!, $repo: String!, $pullRequestNumber: Int!) {
+        repository(owner: $owner, name: $repo) {
+          pullRequest(number: $pullRequestNumber) {
+            reviewThreads(last: 100) {
+              totalCount
+              nodes {
+                id
+                isResolved
+                comments(last: 100) {
+                  totalCount
+                  nodes {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+    {
+      owner,
+      repo,
+      pullRequestNumber,

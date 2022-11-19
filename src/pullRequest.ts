@@ -48,3 +48,27 @@ export async function getReviewComments(
   octokit: Octokit & Api,
 ) {
   const reviews = await octokit.rest.pulls.listReviews({
+    owner,
+    repo,
+    pull_number: pullRequestNumber,
+  });
+  const reviewComments = await octokit.rest.pulls.listReviewComments({
+    owner,
+    repo,
+    pull_number: pullRequestNumber,
+  });
+  const relevantReviews = reviews.data.filter(
+    (review) => review.user?.id === 41898282 && review.body === REVIEW_BODY,
+  );
+  const relevantReviewIds = relevantReviews.map((review) => review.id);
+  const relevantReviewComments = reviewComments.data.filter(
+    (reviewComment) =>
+      reviewComment.user.id === 41898282 &&
+      reviewComment.pull_request_review_id !== null &&
+      relevantReviewIds.includes(reviewComment.pull_request_review_id),
+  );
+  info(`Existing review comments: (${relevantReviewComments.length})`);
+  return relevantReviewComments;
+}
+
+export async function getRevie

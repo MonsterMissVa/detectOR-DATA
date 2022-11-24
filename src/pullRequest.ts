@@ -106,3 +106,23 @@ export async function getReviewThreads(
       owner,
       repo,
       pullRequestNumber,
+    },
+  );
+
+  const reviewThreadTotalCount =
+    queryData?.repository?.pullRequest?.reviewThreads?.totalCount;
+  if (reviewThreadTotalCount !== undefined && reviewThreadTotalCount > 100) {
+    error(`There are more than 100 review threads: ${reviewThreadTotalCount}`);
+  }
+
+  const reviewThreads =
+    queryData?.repository?.pullRequest?.reviewThreads?.nodes;
+  if (reviewThreads !== undefined && reviewThreads !== null) {
+    for (const reviewThread of reviewThreads) {
+      if (reviewThread === null) {
+        continue;
+      }
+      const commentTotalCount = reviewThread?.comments?.totalCount;
+      if (commentTotalCount !== undefined && commentTotalCount > 100) {
+        error(
+          `There are more than 100 review comments in review thread ${reviewThread?.id}: ${comme

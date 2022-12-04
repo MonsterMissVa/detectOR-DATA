@@ -125,4 +125,29 @@ export async function getReviewThreads(
       const commentTotalCount = reviewThread?.comments?.totalCount;
       if (commentTotalCount !== undefined && commentTotalCount > 100) {
         error(
-          `There are more than 100 review comments in review thread ${reviewThread?.id}: ${comme
+          `There are more than 100 review comments in review thread ${reviewThread?.id}: ${commentTotalCount}`,
+        );
+      }
+
+      const comments = reviewThread?.comments?.nodes;
+      if (comments !== undefined && comments !== null) {
+        for (const comment of comments) {
+          const commentId = comment?.id;
+          if (commentId === undefined) {
+            continue;
+          }
+          commentNodeIdToReviewThreadMapping[commentId] = reviewThread;
+        }
+      }
+    }
+  }
+  return commentNodeIdToReviewThreadMapping;
+}
+
+export function getCommentFromFix(source: string, line: number, fix: Rule.Fix) {
+  const textRange = source.substring(fix.range[0], fix.range[1]);
+  const impactedOriginalLines = textRange.split('\n').length;
+  const originalLines = source
+    .split('\n')
+    .slice(line - 1, line - 1 + impactedOriginalLines);
+  const 

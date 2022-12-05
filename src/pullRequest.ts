@@ -170,4 +170,23 @@ export function getCommentFromFix(source: string, line: number, fix: Rule.Fix) {
     start_line: impactedOriginalLines === 1 ? undefined : line,
     side: 'RIGHT',
     line: line + impactedOriginalLines - 1,
-    body: '`
+    body: '```suggestion\n' + `${replacedLines.join('\n')}\n` + '```\n',
+  };
+  return reviewSuggestion;
+}
+
+export function matchReviewComments(
+  reviewComments: components['schemas']['review-comment'][],
+  reviewComment: ReviewComment,
+) {
+  const matchedNodeIds: string[] = [];
+  for (const existingReviewComment of reviewComments) {
+    if (
+      existingReviewComment.path === reviewComment.path &&
+      existingReviewComment.line === reviewComment.line &&
+      existingReviewComment.side === reviewComment.side &&
+      existingReviewComment.start_line == reviewComment.start_line && // null-undefined comparison
+      existingReviewComment.start_side == reviewComment.start_side && // null-undefined comparison
+      existingReviewComment.body === reviewComment.body
+    ) {
+      match

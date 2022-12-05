@@ -150,4 +150,24 @@ export function getCommentFromFix(source: string, line: number, fix: Rule.Fix) {
   const originalLines = source
     .split('\n')
     .slice(line - 1, line - 1 + impactedOriginalLines);
-  const 
+  const replacedSource =
+    source.substring(0, fix.range[0]) +
+    fix.text +
+    source.substring(fix.range[1]);
+  const impactedReplaceLines = fix.text.split('\n').length;
+  const replacedLines = replacedSource
+    .split('\n')
+    .slice(line - 1, line - 1 + impactedReplaceLines);
+  info(
+    '    Fix:\n' +
+      '      ' +
+      `@@ -${line},${impactedOriginalLines} +${impactedReplaceLines} @@\n` +
+      `${originalLines.map((line) => '      - ' + line).join('\n')}\n` +
+      `${replacedLines.map((line) => '      + ' + line).join('\n')}`,
+  );
+  const reviewSuggestion: ReviewSuggestion = {
+    start_side: impactedOriginalLines === 1 ? undefined : 'RIGHT',
+    start_line: impactedOriginalLines === 1 ? undefined : line,
+    side: 'RIGHT',
+    line: line + impactedOriginalLines - 1,
+    body: '`

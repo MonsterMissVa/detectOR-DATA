@@ -189,4 +189,42 @@ export function matchReviewComments(
       existingReviewComment.start_side == reviewComment.start_side && // null-undefined comparison
       existingReviewComment.body === reviewComment.body
     ) {
-      match
+      matchedNodeIds.push(existingReviewComment.node_id);
+    }
+  }
+  return matchedNodeIds;
+}
+
+export async function handlePullRequest(
+  indexedResults: {
+    [file: string]: ESLint.LintResult;
+  },
+  ruleMetaDatas: {
+    [name: string]: Rule.RuleMetaData;
+  },
+  owner: string,
+  repo: string,
+  pullRequestNumber: number,
+  baseSha: string,
+  headSha: string,
+) {
+  const failCheck = getBooleanInput('fail-check');
+  const requestChanges = getBooleanInput('request-changes');
+
+  startGroup('GitHub Pull Request');
+  const octokit = getOctokit();
+  const files = await getPullRequestFiles(
+    owner,
+    repo,
+    pullRequestNumber,
+    octokit,
+  );
+
+  const existingReviewComments = await getReviewComments(
+    owner,
+    repo,
+    pullRequestNumber,
+    octokit,
+  );
+
+  const commentNodeIdToReviewThreadMapping = await g

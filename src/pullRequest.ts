@@ -227,4 +227,31 @@ export async function handlePullRequest(
     octokit,
   );
 
-  const commentNodeIdToReviewThreadMapping = await g
+  const commentNodeIdToReviewThreadMapping = await getReviewThreads(
+    owner,
+    repo,
+    pullRequestNumber,
+    octokit,
+  );
+
+  let commentsCounter = 0;
+  const reviewComments: ReviewComment[] = [];
+  let matchedReviewCommentNodeIds: { [nodeId: string]: boolean } = {};
+  for (const file of files) {
+    info(`  File name: ${file.filename}`);
+    info(`  File status: ${file.status}`);
+    if (file.status === 'removed') {
+      continue;
+    }
+
+    const indexedModifiedLines = getIndexedModifiedLines(file);
+
+    const result = indexedResults[file.filename];
+    if (result) {
+      for (const message of result.messages) {
+        if (message.ruleId === null || result.source === undefined) {
+          continue;
+        }
+        const rule = ruleMetaDatas[message.ruleId];
+        if (indexedModifiedLines[message.line]) {
+          info(`  Matched line: ${message.line

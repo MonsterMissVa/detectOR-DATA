@@ -254,4 +254,26 @@ export async function handlePullRequest(
         }
         const rule = ruleMetaDatas[message.ruleId];
         if (indexedModifiedLines[message.line]) {
-          info(`  Matched line: ${message.line
+          info(`  Matched line: ${message.line}`);
+          if (message.fix) {
+            const reviewSuggestion = getCommentFromFix(
+              result.source,
+              message.line,
+              message.fix,
+            );
+            const reviewComment = {
+              ...reviewSuggestion,
+              body:
+                `**${message.message}** [${message.ruleId}](${rule?.docs?.url})\n\nFix available:\n\n` +
+                reviewSuggestion.body,
+              path: file.filename,
+            };
+            const matchedComments = matchReviewComments(
+              existingReviewComments,
+              reviewComment,
+            );
+            commentsCounter++;
+            if (matchedComments.length === 0) {
+              reviewComments.push(reviewComment);
+              info(`    Comment queued`);
+   

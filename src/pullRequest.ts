@@ -276,4 +276,24 @@ export async function handlePullRequest(
             if (matchedComments.length === 0) {
               reviewComments.push(reviewComment);
               info(`    Comment queued`);
-   
+            } else {
+              matchedReviewCommentNodeIds = {
+                ...matchedReviewCommentNodeIds,
+                ...Object.fromEntries(
+                  matchedComments.map((nodeId) => [nodeId, true]),
+                ),
+              };
+              info(`    Comment skipped`);
+            }
+          } else if (message.suggestions) {
+            let reviewSuggestions: ReviewSuggestion | undefined = undefined;
+            for (const suggestion of message.suggestions) {
+              const reviewSuggestion = getCommentFromFix(
+                result.source,
+                message.line,
+                suggestion.fix,
+              );
+              if (reviewSuggestions === undefined) {
+                reviewSuggestions = { ...reviewSuggestion };
+              } else {
+                if 

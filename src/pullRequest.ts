@@ -296,4 +296,21 @@ export async function handlePullRequest(
               if (reviewSuggestions === undefined) {
                 reviewSuggestions = { ...reviewSuggestion };
               } else {
-                if 
+                if (
+                  reviewSuggestion.start_line !==
+                    reviewSuggestions.start_line ||
+                  reviewSuggestion.line !== reviewSuggestions.line
+                ) {
+                  error(
+                    `    Suggestions have mismatched line(s): ${
+                      reviewSuggestions.start_line === undefined
+                        ? ''
+                        : reviewSuggestions.start_line + ':'
+                    }${reviewSuggestions.line} and ${
+                      reviewSuggestion.start_line === undefined
+                        ? ''
+                        : reviewSuggestion.start_line + ':'
+                    }${reviewSuggestion.line}`,
+                  );
+                }
+                reviewSuggestions.body

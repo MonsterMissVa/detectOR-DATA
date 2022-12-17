@@ -313,4 +313,24 @@ export async function handlePullRequest(
                     }${reviewSuggestion.line}`,
                   );
                 }
-                reviewSuggestions.body
+                reviewSuggestions.body += '\n' + reviewSuggestion.body;
+              }
+            }
+            if (reviewSuggestions !== undefined) {
+              const reviewComment = {
+                ...reviewSuggestions,
+                body:
+                  `**${message.message}** [${message.ruleId}](${rule?.docs?.url})\n\nSuggestion(s) available:\n\n` +
+                  reviewSuggestions.body,
+                path: file.filename,
+              };
+              const matchedComments = matchReviewComments(
+                existingReviewComments,
+                reviewComment,
+              );
+              commentsCounter++;
+              if (matchedComments.length === 0) {
+                reviewComments.push(reviewComment);
+                info(`    Comment queued`);
+              } else {
+                matchedReviewComment

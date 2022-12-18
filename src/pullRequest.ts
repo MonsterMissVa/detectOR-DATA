@@ -380,4 +380,35 @@ export async function handlePullRequest(
     if (reviewThread !== undefined) {
       if (
         matchedReviewCommentNodeIds[reviewComment.node_id] &&
-        reviewThread.i
+        reviewThread.isResolved
+      ) {
+        octokit.graphql(
+          `
+            mutation ($nodeId: ID!) {
+              unresolveReviewThread(input: {threadId: $nodeId}) {
+                thread {
+                  id
+                }
+              }
+            }
+          `,
+          {
+            nodeId: reviewThread.id,
+          },
+        );
+        info(`Review comment unresolved: ${reviewComment.url}`);
+      } else if (
+        !matchedReviewCommentNodeIds[reviewComment.node_id] &&
+        !reviewThread.isResolved
+      ) {
+        octokit.graphql(
+          `
+            mutation ($nodeId: ID!) {
+              resolveReviewThread(input: {threadId: $nodeId}) {
+                thread {
+                  id
+                }
+              }
+            }
+          `,
+        

@@ -354,4 +354,30 @@ export async function handlePullRequest(
               reviewComment,
             );
             commentsCounter++;
-            if (matchedComments.l
+            if (matchedComments.length === 0) {
+              reviewComments.push(reviewComment);
+              info(`    Comment queued`);
+            } else {
+              matchedReviewCommentNodeIds = {
+                ...matchedReviewCommentNodeIds,
+                ...Object.fromEntries(
+                  matchedComments.map((nodeId) => [nodeId, true]),
+                ),
+              };
+              info(`    Comment skipped`);
+            }
+          }
+        }
+      }
+    }
+  }
+  endGroup();
+
+  startGroup('Feedback');
+  for (const reviewComment of existingReviewComments) {
+    const reviewThread =
+      commentNodeIdToReviewThreadMapping[reviewComment.node_id];
+    if (reviewThread !== undefined) {
+      if (
+        matchedReviewCommentNodeIds[reviewComment.node_id] &&
+        reviewThread.i

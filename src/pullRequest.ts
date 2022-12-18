@@ -333,4 +333,25 @@ export async function handlePullRequest(
                 reviewComments.push(reviewComment);
                 info(`    Comment queued`);
               } else {
-                matchedReviewComment
+                matchedReviewCommentNodeIds = {
+                  ...matchedReviewCommentNodeIds,
+                  ...Object.fromEntries(
+                    matchedComments.map((nodeId) => [nodeId, true]),
+                  ),
+                };
+                info(`    Comment skipped`);
+              }
+            }
+          } else {
+            const reviewComment: ReviewComment = {
+              body: `**${message.message}** [${message.ruleId}](${rule?.docs?.url})`,
+              path: file.filename,
+              side: 'RIGHT',
+              line: message.line,
+            };
+            const matchedComments = matchReviewComments(
+              existingReviewComments,
+              reviewComment,
+            );
+            commentsCounter++;
+            if (matchedComments.l

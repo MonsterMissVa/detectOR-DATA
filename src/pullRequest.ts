@@ -411,4 +411,33 @@ export async function handlePullRequest(
               }
             }
           `,
-        
+          {
+            nodeId: reviewThread.id,
+          },
+        );
+        info(`Review comment resolved: ${reviewComment.url}`);
+      } else {
+        info(
+          `Review comment remains ${
+            reviewThread.isResolved ? 'resolved' : 'unresolved'
+          }: ${reviewComment.url}`,
+        );
+      }
+    } else {
+      error(
+        `Review comment has no associated review thread: ${reviewComment.url}`,
+      );
+    }
+  }
+  if (commentsCounter > 0) {
+    const response = await octokit.rest.pulls.createReview({
+      owner,
+      repo,
+      body: REVIEW_BODY,
+      pull_number: pullRequestNumber,
+      commit_id: headSha,
+      event: requestChanges ? 'REQUEST_CHANGES' : 'COMMENT',
+      comments: reviewComments,
+    });
+    if (response.status !== 200) {
+      

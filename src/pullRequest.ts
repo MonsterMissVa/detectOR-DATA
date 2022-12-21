@@ -440,4 +440,25 @@ export async function handlePullRequest(
       comments: reviewComments,
     });
     if (response.status !== 200) {
-      
+      throw new Error(
+        `Failed to create review with ${reviewComments.length} comment(s).`,
+      );
+    }
+    if (commentsCounter - reviewComments.length > 0) {
+      info(
+        `Review comments existed and skipped: ${
+          commentsCounter - reviewComments.length
+        }`,
+      );
+    }
+    info(`Review comments submitted: ${reviewComments.length}`);
+    if (failCheck) {
+      throw new Error('ESLint fails. Please review comments.');
+    } else {
+      error('ESLint fails');
+    }
+  } else {
+    notice('ESLint passes');
+  }
+  endGroup();
+}
